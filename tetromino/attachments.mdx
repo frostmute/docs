@@ -1,0 +1,117 @@
+---
+title: "Handle Images and Files from Are.na in Tetromino"
+sidebarTitle: "Attachments"
+description: "Configure how Tetromino downloads, embeds, or links images and file attachments from Are.na blocks, and migrate files when your settings change."
+---
+
+Tetromino gives you full control over how images and file attachments from Are.na blocks are handled in your vault. You can download them locally for offline access, link to them remotely to save disk space, or embed them inline — and you can change your mind later using the built-in migration tools. This page covers every attachment-related setting and walks through the migration workflow.
+
+## Image Handling
+
+The `imageHandling` setting controls how image blocks and block cover images appear in your notes:
+
+<Tabs>
+  <Tab title="download (default)">
+    Tetromino downloads the image file to your vault and inserts a wiki-style embed:
+
+    ```markdown
+    ![[image-filename.jpg]]
+    ```
+
+    The download location is determined by your `attachmentStorage` setting (see [Attachment Storage](#attachment-storage) below).
+  </Tab>
+  <Tab title="embed">
+    The remote image URL is used directly as a Markdown image — no file is saved to your vault:
+
+    ```markdown
+    ![Block Title](https://cdn.are.na/image/original.jpg)
+    ```
+
+    Images display inline but require an internet connection to render.
+  </Tab>
+  <Tab title="link">
+    A plain Markdown link to the remote image URL is inserted instead of an embed:
+
+    ```markdown
+    [Block Title](https://cdn.are.na/image/original.jpg)
+    ```
+
+    Use this if you want to reference images without embedding them.
+  </Tab>
+</Tabs>
+
+## Attachment Handling
+
+The `attachmentHandling` setting controls non-image files such as PDFs, ZIP archives, and other documents:
+
+| Value | Behavior |
+|---|---|
+| `download` (default) | The file is downloaded to your vault. |
+| `link` | A Markdown link to the remote file URL is inserted — no file is saved. |
+
+## Downloaded Attachment Rendering
+
+When a file is downloaded, `downloadedAttachmentLinkStyle` controls how it appears in the note:
+
+| Value | Rendered output |
+|---|---|
+| `link` (default) | `[[filename.pdf]]` — a standard wiki link |
+| `embed` | `![[filename.pdf]]` — embedded inline (useful for PDFs with Obsidian's PDF viewer) |
+
+## Attachment Storage
+
+The `attachmentStorage` setting determines where downloaded files are saved in your vault:
+
+<Tabs>
+  <Tab title="global (default)">
+    All downloaded files go to a single shared folder, regardless of which channel they came from. The default path is `Are.na/Attachments/`, configurable via `globalAttachmentFolder`.
+
+    ```
+    Are.na/
+    └── Attachments/
+        ├── image.jpg
+        └── document.pdf
+    ```
+  </Tab>
+  <Tab title="channel">
+    Files are saved inside the channel's own folder, alongside the block notes.
+
+    ```
+    Are.na/
+    └── my-research-channel/
+        ├── index.md
+        ├── Block Title.md
+        └── image.jpg
+    ```
+  </Tab>
+  <Tab title="custom">
+    Files are saved to any vault path you specify via `customAttachmentFolder`. Set this to an existing Obsidian attachment folder to keep Are.na downloads alongside your other attachments.
+  </Tab>
+</Tabs>
+
+<Note>
+  Individual channel mappings can override the global `attachmentStorage` setting. Open **Settings → Tetromino → Channel mappings**, expand a mapping, and set **Attachment storage override** to `channel`, `global`, or `custom`. Set it to `null` (or leave it blank) to inherit the global setting.
+</Note>
+
+## Attachment Migration
+
+If you change your `attachmentStorage` setting or `globalAttachmentFolder` path after an initial import, existing downloaded files may be in the wrong location. Tetromino's migration tool moves them and rewrites the embed links in all affected notes automatically.
+
+<Steps>
+  <Step title="Preview the migration">
+    Open the command palette (`Ctrl/Cmd+P`) and run **Preview attachment migration**. Tetromino compares the current file locations against where files should be based on your new settings and shows a dry-run summary of every file that would move and every note whose links would be rewritten.
+  </Step>
+  <Step title="Review the changes">
+    Check the migration preview carefully. The diff viewer shows which embed or link lines in each note would be updated. No files are moved during the preview.
+  </Step>
+  <Step title="Run the migration">
+    When you're satisfied with the preview, run **Run attachment migration** from the command palette. Tetromino moves all affected files and rewrites their references in a single pass.
+  </Step>
+  <Step title="Check the migration log">
+    After the migration completes, open `Are.na/migration-history.md`. Each migration run appends a timestamped entry listing every file that was moved and every note that was updated.
+  </Step>
+</Steps>
+
+<Warning>
+  Always run **Preview attachment migration** before **Run attachment migration**. The migration rewrites note content in bulk — reviewing the preview first ensures no unexpected link changes are applied to your notes.
+</Warning>

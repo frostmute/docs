@@ -1,0 +1,71 @@
+---
+title: "Quick Import a Single Raindrop by URL or ID"
+sidebarTitle: "Quick Import"
+description: "Bring a single Raindrop.io bookmark into your Obsidian vault immediately by pasting its URL or numeric ID — no filter modal required."
+---
+
+Quick Import lets you fetch one bookmark at a time without opening the full Bulk Import modal. It is the fastest way to capture a specific item you are looking at right now in Raindrop.io — just grab its URL or ID, run the command, and the note appears in your vault immediately. Your default folder, filename template, and template settings all apply exactly as they would for a bulk import.
+
+## How to Quick Import
+
+<Steps>
+  <Step title="Open the command palette">
+    Press `Ctrl+P` on Windows/Linux or `Cmd+P` on macOS.
+  </Step>
+  <Step title="Run the Quick Import command">
+    Search for **Quick import raindrop by URL or ID** and select it.
+  </Step>
+  <Step title="Paste the Raindrop URL or ID">
+    In the input field that appears, paste the full Raindrop.io item URL or enter the numeric item ID directly.
+
+    **Accepted formats:**
+    ```
+    https://app.raindrop.io/my/0/item/12345678
+    12345678
+    ```
+  </Step>
+  <Step title="Optionally set a vault path and tags">
+    The prompt may also ask for an optional vault folder path and any tags to append to the note. Leave these blank to use your plugin defaults.
+  </Step>
+  <Step title="Confirm and import">
+    Press `Enter`. Make It Rain fetches the bookmark from the Raindrop.io API and creates the note in your vault. A status bar message confirms success.
+  </Step>
+</Steps>
+
+## Finding a Raindrop ID
+
+Every bookmark in Raindrop.io has a unique numeric ID. You can find it in two places:
+
+- **From the browser URL:** Open the item in Raindrop.io. The URL follows the pattern `https://app.raindrop.io/my/0/item/12345678` — the ID is the number after `/item/`.
+- **From the share link:** Right-click any bookmark in Raindrop.io and copy its link. The numeric ID is the last segment of the path.
+
+You can paste either the full URL or just the bare number — Make It Rain extracts the ID automatically from a URL.
+
+## Quick Import vs Bulk Import
+
+<Tabs>
+  <Tab title="Quick Import">
+    **Best for:** Capturing a specific bookmark you have in front of you right now.
+
+    - Imports a **single item** at a time
+    - Identified by **URL or numeric ID**
+    - Runs **immediately** — no modal to configure
+    - No collection, tag, or type filtering
+    - Respects your **default folder** and **template** settings
+    - Great for ad-hoc capture during research or reading sessions
+  </Tab>
+  <Tab title="Bulk Import">
+    **Best for:** Periodic syncs of entire collections or filtered slices of your library.
+
+    - Imports **many items** in one operation
+    - Filtered by **collection, tag, content type, and more**
+    - Opens a **full modal** with per-run configuration options
+    - Supports **Fetch Only New** and **Update Existing** to avoid duplicates
+    - Results can be saved as **presets** for one-click re-runs
+    - See [Bulk Import](/importing/bulk-import) for full details
+  </Tab>
+</Tabs>
+
+<Note>
+  Quick imports respect all of your plugin-level defaults: the **Default Folder**, **Filename Template**, **Template System**, and **Download Files** settings apply just as they would during a bulk import. If you want the note in a different folder for a specific item, supply the optional vault path when the prompt asks for it.
+</Note>

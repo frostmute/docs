@@ -1,0 +1,93 @@
+---
+title: "Aggregate Raindrop Highlights into a Single Note"
+sidebarTitle: "Highlights"
+description: "Pull highlighted passages from multiple Raindrop.io bookmarks into one consolidated Obsidian note, grouped by source and filtered by tag."
+---
+
+Raindrop.io lets you highlight passages while reading web articles using its browser extension, and those highlights sync back to each bookmark as structured data. Make It Rain surfaces highlights in two ways: automatically inside each individual bookmark note, and as an aggregated "all highlights on a topic" note you can generate on demand. This page explains both and shows you how to use the aggregate command to build focused reading-notes documents.
+
+## What Are Raindrop Highlights?
+
+When you use the Raindrop.io browser extension to highlight text on a webpage, Raindrop.io stores that highlighted passage — along with an optional annotation you write — as part of the bookmark. Each highlight has a text body, an optional note, a color label, and a creation timestamp.
+
+Make It Rain imports all highlights attached to a bookmark as part of the note for that item. You can also use the **Aggregate Highlights by Tag** command to collect highlights from many bookmarks — all sharing a given Raindrop.io tag — into a single consolidated note, making it easy to review everything you marked up on a topic in one place.
+
+## Highlights in Bookmark Notes
+
+When a bookmark has highlights, Make It Rain automatically includes them in the imported note under a `## Highlights` section. No extra configuration is needed — if the `highlights` array is present on the raindrop, it is rendered.
+
+Using the template system, highlights are exposed as the `{{highlights}}` array variable. The default template renders them like this:
+
+```markdown
+## Highlights
+
+- Knowledge management doesn't have to be complicated. — *Start simple*
+- Your notes are plain Markdown files — no proprietary format lock-in.
+- Links between notes create a web of context you can actually navigate.
+```
+
+If a highlight carries an annotation, it appears as italicised text after an em dash. If there is no annotation, only the highlighted passage is shown.
+
+To customise the highlights rendering in your own template, iterate over the array with `{{#each highlights}}`:
+
+```markdown
+{{#if highlights}}
+## Highlights
+
+{{#each highlights}}
+- {{this.text}}{{#if this.note}} — *{{this.note}}*{{/if}}
+{{/each}}
+{{/if}}
+```
+
+## Aggregate Highlights by Tag
+
+The **Aggregate Highlights by Tag** command collects every highlighted passage from all bookmarks that share a specific Raindrop.io tag and writes them into a single note. This is useful for building a "Key Insights from my reading on X" document without manually copying text between notes.
+
+<Steps>
+  <Step title="Open the command palette">
+    Press `Ctrl+P` (Windows/Linux) or `Cmd+P` (macOS).
+  </Step>
+  <Step title="Run the aggregate command">
+    Search for **Aggregate highlights by tag** and select it.
+  </Step>
+  <Step title="Enter the tag to aggregate">
+    Type the Raindrop.io tag whose highlights you want to collect — for example, `reading` or `machine-learning`. Do not include the `#` prefix; enter the tag name as it appears in Raindrop.io.
+  </Step>
+  <Step title="Choose a vault path">
+    Enter the folder path inside your vault where the aggregate note should be saved. Leave blank to use your default folder.
+  </Step>
+  <Step title="Confirm and generate">
+    Press `Enter` or click **Aggregate**. Make It Rain fetches all bookmarks with that tag, collects their highlights, and writes the output note.
+  </Step>
+</Steps>
+
+The generated note groups highlights by their source bookmark, with a link back to the original note. A typical aggregate note looks like this:
+
+```markdown
+---
+title: "Highlights: machine-learning"
+tags:
+  - machine-learning
+  - highlights-aggregate
+generated: 2024-06-15
+---
+
+# Highlights: machine-learning
+
+## [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+
+- The dominant sequence transduction models are based on complex recurrent or convolutional neural networks.
+- Attention mechanisms allow modeling of dependencies without regard to their distance in input or output sequences. — *Key insight for transformers*
+
+---
+
+## [A Visual Introduction to Machine Learning](http://www.r2d3.us/visual-intro-to-machine-learning-part-1/)
+
+- A decision tree is built by asking a series of questions about the data.
+- Overfitting occurs when a model learns the training data too well, including its noise.
+```
+
+<Tip>
+  Use Aggregate Highlights by Tag to build a **Reading Notes** or **Key Insights** document for any topic you are actively researching. Create a dedicated Raindrop.io tag like `ai-research` or `book-notes`, highlight as you read, then run the aggregate command periodically to assemble everything into one note you can review, link from, or share.
+</Tip>

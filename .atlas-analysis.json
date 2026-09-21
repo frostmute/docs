@@ -1,0 +1,130 @@
+{
+  "projectType": "saas",
+  "projectName": "Make It Rain",
+  "projectDescription": "An Obsidian plugin that pulls Raindrop.io bookmarks, highlights, and attachments into your vault as richly formatted Markdown notes with smart folder structures and native file support.",
+  "theme": "almond",
+  "primaryColor": "#ffffff",
+  "lightColor": "#2463ec",
+  "darkColor": null,
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Make It Rain",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "installation"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/how-it-works",
+              "concepts/collections-and-folders",
+              "concepts/templates",
+              "concepts/safe-sync"
+            ]
+          },
+          {
+            "group": "Importing Bookmarks",
+            "pages": [
+              "importing/bulk-import",
+              "importing/quick-import",
+              "importing/highlights",
+              "importing/presets"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "configuration/settings",
+              "configuration/templates",
+              "configuration/file-downloads"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/obsidian-setup",
+              "guides/raindrop-authentication",
+              "guides/folder-organization",
+              "guides/sharing-templates",
+              "guides/troubleshooting"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Tetromino",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "tetromino/introduction",
+              "tetromino/quickstart"
+            ]
+          },
+          {
+            "group": "Importing Channels",
+            "pages": [
+              "tetromino/channels",
+              "tetromino/blocks",
+              "tetromino/dry-run",
+              "tetromino/attachments"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "tetromino/settings",
+              "tetromino/templates",
+              "tetromino/auto-sync"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "tetromino/troubleshooting"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Bulk import Raindrop.io bookmarks filtered by collection, tag, and content type",
+    "Quick import a single raindrop by URL or item ID",
+    "Rich Handlebars-like template engine with per-content-type templates and named partials",
+    "Automatic vault folder hierarchy mirroring Raindrop Groups and Collections",
+    "Native file downloads for PDFs, EPUBs, video, and audio attachments",
+    "Archive scraping for full article text from Raindrop archives",
+    "Safe Sync to detect and reconcile deleted or renamed remote bookmarks",
+    "Saved import presets accessible directly from the command palette",
+    "Aggregate highlights by tag into consolidated notes",
+    "Are.na channel import via Tetromino plugin with deterministic one-way sync"
+  ],
+  "publicApiSurface": [
+    "Command: fetch-raindrops (Fetch Raindrops Filtered)",
+    "Command: quick-import-raindrop (Quick Import by URL or ID)",
+    "Command: aggregate-highlights-by-tag (Aggregate Highlights by Tag)",
+    "Command: safe-sync-scan (Safe Sync — Scan for Deleted/Renamed Raindrops)",
+    "Command: fetch-preset-{id} (Run Saved Import Preset)",
+    "Setting: apiToken (Raindrop.io Bearer token)",
+    "Setting: defaultFolder (Default vault import path)",
+    "Setting: fileNameTemplate (Filename template with variables)",
+    "Setting: isTemplateSystemEnabled (Toggle template engine)",
+    "Setting: contentTypeTemplates (Per-type templates: link, article, image, video, doc, audio, book)",
+    "Setting: downloadFiles (Download file attachments locally)",
+    "Setting: createFolderNotes (Generate collection index notes)",
+    "Setting: archiveScraping (Extract full article text)",
+    "Setting: enableSafeSync / safeSyncAction (Safe sync behavior)",
+    "Setting: importPresets (Saved bulk-import configurations)",
+    "Template variable: title, id, link, cover, excerpt, note, tags, highlights, collectionTitle, collectionPath, domain, formattedCreatedDate, scrapedContent, localEmbed",
+    "Tetromino Command: arena-sync-now (Import All Channels Now)",
+    "Tetromino Command: arena-sync-preview (Dry-Run Preview)",
+    "Tetromino Command: arena-sync-migration-run (Run Attachment Migration)"
+  ]
+}

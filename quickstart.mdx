@@ -1,47 +1,98 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with Make It Rain in Minutes"
+sidebarTitle: "Quickstart"
+description: "Install Make It Rain, generate a Raindrop.io API token, and import your first bookmarks into Obsidian as Markdown notes in five minutes or less."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
-
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+This quickstart walks you through everything from installing Make It Rain to seeing your first Raindrop bookmarks appear as Markdown notes in your Obsidian vault. The entire process takes about five minutes. If you want deeper detail on any step — manual installation, advanced settings, or template customization — follow the links at the bottom of this page.
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Install Make It Rain">
+    Open Obsidian and go to **Settings → Community Plugins**. If you see a prompt about Safe Mode, turn it off. Click **Browse**, type **Make It Rain** in the search box, then click the result, click **Install**, and finally click **Enable**.
 
-    ```bash
-    npm install your-package
-    ```
+    <Note>
+      Make It Rain requires Obsidian 1.13.0 or later. If the Install button is greyed out, update Obsidian first.
+    </Note>
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
 
-    ```bash
-    your-cli init
-    ```
+  <Step title="Generate your Raindrop.io API token">
+    You need a personal API token so Make It Rain can read your Raindrop account.
+
+    1. Open [app.raindrop.io/settings/integrations](https://app.raindrop.io/settings/integrations) in your browser.
+    2. Scroll to **For Developers** and click **+ Create new app**.
+    3. Enter any name — for example, `Make It Rain` — and click **Create**.
+    4. Click the app name to expand it, then click **Create test token**.
+    5. Copy the token to your clipboard. It starts with `eyJ` and is quite long.
+
+    <Warning>
+      Treat this token like a password. It grants read access to your entire Raindrop account. Do not share it or commit it to version control.
+    </Warning>
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
 
-    ```bash
-    your-cli start
-    ```
+  <Step title="Enter the token in Make It Rain settings">
+    Back in Obsidian, open **Settings → Community Plugins → Make It Rain** (click the gear icon next to the plugin, or navigate to the plugin's settings tab).
+
+    Paste your token into the **API Token** field, then click **Verify Token**. You should see a success notice confirming the connection. Optionally, set a **Default Folder** to control where imported notes are saved in your vault.
+  </Step>
+
+  <Step title="Open the import modal">
+    Open the Command Palette with `Ctrl+P` (Windows/Linux) or `Cmd+P` (macOS) and type **Fetch raindrops**. Select **Fetch Raindrops (Filtered)** from the list.
+
+    The import modal opens and loads your Raindrop collections. Select the collection you want to import from the dropdown. You can also filter by tag or content type if you want to narrow the import.
+  </Step>
+
+  <Step title="Import your bookmarks">
+    Click **Fetch Raindrops**. Make It Rain fetches your bookmarks from the Raindrop API and writes each one to your vault as a Markdown file. A status notice shows progress. When it completes, your notes appear in the folder you configured — or the vault root if you left the default folder blank.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## What an imported note looks like
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
+Each bookmark becomes a Markdown file with YAML frontmatter containing the full Raindrop metadata, followed by a structured body. Here is an example of what a typical article import produces:
+
+```markdown
+---
+title: "Understanding React Hooks"
+id: 123456789
+link: https://example.com/react-hooks-deep-dive
+type: article
+collectionTitle: "Web Development"
+collectionPath: "Learning/Web Development"
+collectionGroup: "CORE KNOWLEDGE"
+tags:
+  - react
+  - javascript
+  - frontend
+created: 2024-03-10T09:15:00Z
+lastupdate: 2024-03-11T14:42:00Z
+banner: https://example.com/images/react-cover.jpg
+---
+
+# Understanding React Hooks
+
+> A deep dive into the React Hooks API and how to replace class-based lifecycle methods with functional components.
+
+**My note:** Great reference — revisit before the team migration sprint.
+
+## Highlights
+
+- ==Hooks let you use state and other React features without writing a class.== *(2024-03-10)*
+- ==The useEffect Hook lets you perform side effects in function components.== *(2024-03-10)*
+
+## Details
+
+| Field | Value |
+|-------|-------|
+| Domain | example.com |
+| Type | Article |
+| Saved | March 10, 2024 |
+| Updated | March 11, 2024 |
+
+[Open in Raindrop](https://app.raindrop.io/item/123456789) · [Visit source](https://example.com/react-hooks-deep-dive)
+```
+
+The exact output depends on your active template. The default template includes all available metadata; you can customize every section using the template engine.
+
+<Tip>
+  If you import the same collection regularly, save your settings as a **preset**. Open the import modal, configure your filters and folder, then click **Save as Preset**. Make It Rain registers a dedicated Command Palette entry for that preset — run it in one step without reopening the modal.
 </Tip>

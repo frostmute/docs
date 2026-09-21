@@ -1,0 +1,80 @@
+---
+title: "Connect Make It Rain to Your Raindrop.io Account"
+sidebarTitle: "Authentication"
+description: "Generate a Raindrop.io personal API token, add it to Make It Rain, and understand how the plugin stores and uses your credentials securely."
+---
+
+Make It Rain connects to Raindrop.io using a personal API token tied to your account. This token acts as a password for the Raindrop.io API — it lets the plugin read your bookmarks, collections, highlights, and attachments without requiring your username or password. This guide walks you through generating the token in the Raindrop.io developer settings and pasting it into the plugin.
+
+## Generate Your API Token
+
+Raindrop.io provides a free developer integrations page where you can create a personal app and copy a test token. You do not need to publish the app or configure OAuth — the test token is all Make It Rain needs.
+
+<Steps>
+  <Step title="Log in and open Integrations">
+    Log in to your Raindrop.io account and navigate to [app.raindrop.io/settings/integrations](https://app.raindrop.io/settings/integrations).
+  </Step>
+  <Step title="Create a new app">
+    Click **Create new app**. A dialog prompts you for a name.
+  </Step>
+  <Step title="Name the app">
+    Enter a descriptive name such as `Obsidian Make It Rain`. The name is only visible to you and has no effect on functionality.
+  </Step>
+  <Step title="Expand the app entry">
+    After saving, click the newly created app in the list to expand its details panel.
+  </Step>
+  <Step title="Copy the Test token">
+    Locate the **Test token** field and click the copy button beside it. This is your personal API token. Keep it private — treat it like a password.
+  </Step>
+</Steps>
+
+<Warning>
+  If you later revoke or regenerate your token in the Raindrop.io integrations settings — for example, as a security precaution — you must return to Make It Rain settings and paste the new token. Imports will fail with a 401 Unauthorized error until the token is updated.
+</Warning>
+
+## Add the Token to Make It Rain
+
+Once you have your token copied, adding it to Make It Rain takes under a minute.
+
+<Steps>
+  <Step title="Open Obsidian Settings">
+    Press `Cmd/Ctrl + ,` or click the gear icon in the bottom-left sidebar.
+  </Step>
+  <Step title="Navigate to Make It Rain">
+    Scroll to **Community Plugins** in the left panel and select **Make It Rain**.
+  </Step>
+  <Step title="Paste your token">
+    Find the **API Token** field at the top of the settings page and paste your token.
+  </Step>
+  <Step title="Verify the connection">
+    Click **Verify Token** to confirm Make It Rain can reach the Raindrop.io API. A success notice confirms the token is valid. The plugin connects immediately — no restart needed.
+  </Step>
+</Steps>
+
+## Token Security
+
+Your API token is stored locally in your Obsidian plugin data file at `.obsidian/plugins/make-it-rain/data.json` inside your vault. Make It Rain sends the token only to the official Raindrop.io API (`https://api.raindrop.io`) — it is never transmitted to any other server or third-party service.
+
+<Note>
+  If you sync your vault with a cloud service (iCloud, Dropbox, Obsidian Sync), the `data.json` file containing your token will sync along with it. This is generally safe for personal use, but be mindful if you share vault access with others. You can exclude `.obsidian/plugins/make-it-rain/data.json` from sync in your cloud provider's ignore settings if needed.
+</Note>
+
+## Troubleshooting Token Issues
+
+If imports fail or you see an authentication-related error, work through these checks in order:
+
+<Accordion title="401 Unauthorized error during import">
+  Your token is either missing, incorrect, or has been revoked. Open **Settings → Make It Rain**, confirm the API Token field is not empty, and click **Verify Token**. If verification fails, return to [Raindrop.io integrations](https://app.raindrop.io/settings/integrations), open your app, and copy the Test token again. Paste the new value and retry.
+</Accordion>
+
+<Accordion title="Copied the wrong value from Raindrop.io">
+  The integrations page shows several values for each app: the App ID, the App Secret, and the Test token. Make It Rain requires the **Test token** only. The Test token is a long JWT string beginning with `eyJ`. If the value you copied is short or numeric, you may have copied the App ID instead.
+</Accordion>
+
+<Accordion title="Token works on desktop but not mobile">
+  Your vault's `data.json` may not have synced to your mobile device yet. Open your sync provider and force a manual sync, then relaunch Obsidian on mobile. Alternatively, re-enter the token directly in Make It Rain settings on the mobile device.
+</Accordion>
+
+<Accordion title="No internet connection">
+  Make It Rain requires an active internet connection to reach the Raindrop.io API. Check your connection and try again. On mobile, confirm you are not in airplane mode or on a restricted network.
+</Accordion>

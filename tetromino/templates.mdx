@@ -1,0 +1,177 @@
+---
+title: "Customize Block Notes with Tetromino Templates"
+sidebarTitle: "Templates"
+description: "Use Tetromino's Handlebars-like template engine to take full control over how Are.na block notes are formatted in your Obsidian vault."
+---
+
+Tetromino includes an advanced template engine that gives you full control over how Are.na block notes are formatted in your vault. Templates use a Handlebars-like syntax with variables, conditionals, and loops, letting you produce exactly the Markdown structure you want — custom frontmatter fields, bespoke section headings, conditional content blocks, and more.
+
+## Enabling Templates
+
+The template engine is an advanced feature. Because it is not yet available in the Tetromino Settings UI, you enable it by editing the plugin's `data.json` file directly.
+
+<Note>
+  The template engine UI is planned for a future release. For now, enabling
+  templates requires editing `data.json` as described below. Restart Obsidian
+  after any change to this file for the settings to take effect.
+</Note>
+
+<Steps>
+  <Step title="Close Obsidian">
+    Quit Obsidian completely before editing `data.json` to prevent your changes
+    from being overwritten by the plugin saving its own state.
+  </Step>
+  <Step title="Open data.json in a text editor">
+    Navigate to your vault folder and open the file at:
+
+    ```
+    .obsidian/plugins/tetromino/data.json
+    ```
+
+    Use any plain-text editor (VS Code, Notepad, TextEdit in plain-text mode, etc.).
+  </Step>
+  <Step title="Enable the template engine">
+    Find the `templateEnabled` key and set it to `true`:
+
+    ```json
+    {
+      "templateEnabled": true
+    }
+    ```
+
+    If the key does not exist yet, add it to the JSON object.
+  </Step>
+  <Step title="Add your template string">
+    Add a `templateString` key containing your template. Use `\n` for newlines
+    when writing in JSON:
+
+    ```json
+    {
+      "templateEnabled": true,
+      "templateString": "---\ntitle: \"{{title}}\"\narena_id: {{id}}\n---\n\n# {{title}}\n\n{{content}}"
+    }
+    ```
+  </Step>
+  <Step title="Reopen Obsidian">
+    Launch Obsidian again. Tetromino will pick up the new settings and use your
+    template for all subsequent block note renders.
+  </Step>
+</Steps>
+
+## Default Template
+
+When `templateEnabled` is `false` (the default), Tetromino uses its built-in output format. The following template closely represents that default structure and is a good starting point for your own customizations:
+
+```handlebars
+---
+title: "{{title}}"
+arena_id: {{id}}
+arena_type: {{class}}
+arena_url: "{{arena_url}}"
+{{#if description}}description: "{{description}}"{{/if}}
+---
+
+# {{title}}
+
+{{content}}
+
+{{#if description}}
+## Description
+{{description}}
+{{/if}}
+```
+
+## Template Syntax
+
+Tetromino templates use a Handlebars-like syntax. The three core constructs are variables, conditionals, and loops.
+
+### Variables
+
+Insert any template variable by wrapping its name in double curly braces:
+
+```handlebars
+{{title}}
+{{id}}
+{{source_url}}
+```
+
+### Conditionals
+
+Wrap content in `{{#if}}...{{/if}}` to render it only when the variable is non-empty. The `{{else}}` clause is optional:
+
+```handlebars
+{{#if source_url}}
+[Source]({{source_url}})
+{{else}}
+No source URL available.
+{{/if}}
+```
+
+### Loops
+
+Iterate over array variables with `{{#each}}...{{/each}}`. Inside the loop body, use `{{this}}` to reference the current item, or `{{this.field}}` for objects:
+
+```handlebars
+{{#each comments}}
+- {{this.content}}
+{{/each}}
+```
+
+## Template Variables Reference
+
+Every variable available inside a Tetromino template is listed below. Variables that are empty or not applicable for a given block type render as an empty string — use `{{#if}}` guards to suppress blank output.
+
+| Variable | Description |
+|---|---|
+| `{{id}}` | Are.na block ID |
+| `{{title}}` | Block title |
+| `{{class}}` | Block type (`Text`, `Image`, `Link`, `Attachment`, `Media`, `Channel`) |
+| `{{content}}` | Block content body |
+| `{{description}}` | Block description |
+| `{{image}}` | Image URL (populated for Image blocks) |
+| `{{arena_url}}` | URL to the block on Are.na |
+| `{{source_url}}` | Original source URL (populated for Link and Attachment blocks) |
+| `{{channel_title}}` | Title of the parent Are.na channel |
+| `{{channel_slug}}` | Slug of the parent Are.na channel |
+| `{{comments}}` | Array of block comment objects |
+| `{{connected_channels}}` | Array of other channels that contain this block |
+| `{{created_at}}` | Block creation timestamp |
+| `{{updated_at}}` | Block last-updated timestamp |
+
+## Example: Custom Link Template
+
+The following template is purpose-built for Link-type blocks. It prominently surfaces the source URL, renders the description as a blockquote, and appends any comments:
+
+```handlebars
+---
+title: "{{title}}"
+arena_id: {{id}}
+type: link
+url: "{{source_url}}"
+arena_url: "{{arena_url}}"
+channel: "{{channel_title}}"
+---
+
+# {{title}}
+
+[Visit Source]({{source_url}})
+
+{{#if description}}
+> {{description}}
+{{/if}}
+
+{{#if comments}}
+## Comments
+{{#each comments}}
+- {{this.content}}
+{{/each}}
+{{/if}}
+```
+
+Copy this template into your `templateString` value in `data.json` (replacing newlines with `\n`), or adapt it to match your own note structure.
+
+<Tip>
+  Build and test your template on a small channel first. Use the **Preview
+  import (dry-run)** command to see how notes will look before writing anything
+  to your vault.
+</Tip>

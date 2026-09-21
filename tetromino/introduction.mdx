@@ -1,0 +1,48 @@
+---
+title: "Tetromino: Import Are.na Channels into Obsidian"
+sidebarTitle: "Introduction"
+description: "Tetromino imports your Are.na channels into Obsidian as organized Markdown notes — deterministic, one-way, and fully under your control."
+---
+
+Tetromino is an Obsidian plugin that brings your Are.na research into your vault. Are.na is a visual platform for collecting and connecting ideas — bookmarks, images, text snippets, files, and embedded media are all organized into channels. Tetromino converts those channels into Markdown notes you can read, link, and build on inside Obsidian. This page explains what Tetromino does, why it exists, how its core design works, and what you need to get started.
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="Channel Import" icon="arrow-down-to-bracket">
+    Map any Are.na channel to a vault folder. Tetromino fetches all blocks — including paginated results beyond the first 100 — and writes stable Markdown notes for each one.
+  </Card>
+  <Card title="Dry-Run Preview" icon="magnifying-glass">
+    Preview exactly which files would be created, updated, or left unchanged before committing to a real import. A per-file diff viewer shows line-by-line changes.
+  </Card>
+  <Card title="Attachment Downloads" icon="paperclip">
+    Download images and file attachments directly to your vault, or link to them remotely. Control storage location globally or per channel, and migrate files if your preferences change.
+  </Card>
+  <Card title="Auto Sync" icon="rotate">
+    Optional sync-on-startup and repeating interval settings let you automate imports. Both are off by default — nothing runs unless you trigger it.
+  </Card>
+  <Card title="Import History" icon="clock-rotate-left">
+    Every completed import is appended to `Are.na/import-history.md`. A separate `Are.na/migration-history.md` tracks attachment moves.
+  </Card>
+  <Card title="Template Engine" icon="code">
+    A Handlebars-like template system gives you full control over the Markdown output for every block. Override the default layout with your own frontmatter fields and content structure.
+  </Card>
+</CardGroup>
+
+## Design Philosophy
+
+Tetromino is built around three principles:
+
+- **One-way sync.** Data flows from Are.na to Obsidian only. Tetromino never writes back to Are.na, never modifies your channels, and never deletes remote content.
+- **Deterministic output.** Given the same Are.na block content, Tetromino always produces the same Markdown note. Existing notes are only rewritten when the remote content actually changes — so your vault stays stable between imports.
+- **Manual by default.** No automatic imports run without your explicit action. The optional `syncOnStartup` and `syncInterval` settings exist for power users, but both ship disabled.
+
+## Requirements
+
+- **Obsidian 1.0 or later**
+- An **Are.na account** with at least one channel
+- An **Are.na personal access token** (generated at [are.na/developers/personal-access-tokens](https://www.are.na/developers/personal-access-tokens))
+
+<Note>
+  Looking to import Raindrop.io bookmarks instead? See [Make It Rain](/introduction) — the sister plugin built on the same sync engine.
+</Note>

@@ -1,0 +1,105 @@
+---
+title: "Troubleshooting Common Tetromino Issues"
+sidebarTitle: "Troubleshooting"
+description: "Diagnose and fix the most frequent Tetromino problems — missing channels, empty imports, broken images, duplicate notes, and more."
+---
+
+Most Tetromino issues fall into a handful of categories: authentication problems, misconfigured channel mappings, attachment handling edge cases, and sync scheduling surprises. This guide covers the most frequent problems, their likely causes, and step-by-step fixes for each.
+
+<AccordionGroup>
+  <Accordion title="No channels found after 'Import my channels'">
+    **Cause:** The API token is missing, incorrect, or lacks sufficient permissions.
+
+    **Fix:**
+    1. Go to **Settings → Community Plugins → Tetromino** and check the **API Token** field.
+    2. Confirm the value is a **personal access token** generated at [https://dev.are.na/oauth/applications](https://dev.are.na/oauth/applications). It is not an app ID, client ID, or client secret.
+    3. Click the **Verify** button next to the token field. A green confirmation means the token is valid and Tetromino can reach the Are.na API.
+    4. If verification fails, delete the token, generate a new one at the link above, paste it in, and verify again.
+  </Accordion>
+
+  <Accordion title="Import completes but vault has no new files">
+    **Cause:** Channel mappings exist but are disabled, or the import is writing to an unexpected folder.
+
+    **Fix:**
+    1. Open **Settings → Community Plugins → Tetromino** and review your channel mappings.
+    2. Confirm that the channels you expect to import have their toggle switched **on**. Disabled channels are skipped entirely — no notes are created and no error is shown.
+    3. Check the **Target folder** column for each mapping. If the folder path is wrong or points to a location you did not expect, update it.
+    4. Run **Preview import (dry-run)** from the command palette to see exactly which files Tetromino plans to create before committing the write.
+  </Accordion>
+
+  <Accordion title="Some blocks are missing from the import">
+    **Cause:** Blocks may be excluded by class filter, or the channel may have access restrictions.
+
+    **Fix:**
+    1. Open **Settings → Community Plugins → Tetromino** and check the **Exclude classes** setting. If any block class is listed there (e.g. `Image`, `Link`), blocks of that type are silently skipped.
+    2. Confirm the Are.na channel is **public**, or that your API token has access to private channels. Blocks in private channels you do not have permission to read will not appear in the API response.
+    3. Enable **Debug logging** (`debugLogging: true`) and re-run the import. The console output will show pagination progress, block counts per page, and any blocks skipped due to class exclusions.
+  </Accordion>
+
+  <Accordion title="Images are broken or not displaying">
+    **Cause:** Remote embed URLs from the Are.na CDN may have changed or expired.
+
+    **Fix:**
+    1. Open **Settings → Community Plugins → Tetromino** and find the **Image handling** setting.
+    2. Switch `imageHandling` from `embed` to `download`. In download mode, Tetromino saves a local copy of each image to your attachment folder, so the embed in your note points to a stable local file rather than a remote CDN URL.
+    3. Re-run the import. Tetromino will download images for blocks that previously had broken embeds.
+  </Accordion>
+
+  <Accordion title="Attachment migration broke embed links">
+    **Cause:** The migration rewrote attachment paths but the expected source paths were not found, leaving some links broken.
+
+    **Fix:**
+    1. Open the **Command Palette** (`Ctrl/Cmd+P`) and run **Preview attachment migration**.
+    2. Review the diff viewer carefully — confirm that every source path exists and every target path is correct before proceeding.
+    3. Run **Run attachment migration** only after you are satisfied the preview is accurate.
+    4. Check `Are.na/migration-history.md` in your vault for a detailed log of what changed during the last migration run. This file records every path rewrite and can help you identify which links need manual correction.
+  </Accordion>
+
+  <Accordion title="Auto-sync is not running">
+    **Cause:** Both auto-sync options are off, or Obsidian is not running when the interval is due to fire.
+
+    **Fix:**
+    1. Open **Settings → Community Plugins → Tetromino**.
+    2. Confirm that **Sync interval** (`syncInterval`) is set to a **non-zero** value, or that **Sync on startup** (`syncOnStartup`) is toggled on — at least one must be active for automatic imports to occur.
+    3. Remember that the interval timer only runs while Obsidian is open. If Obsidian was closed during the expected sync window, no import fires. Enable **Sync on startup** alongside the interval to ensure your vault catches up each time you open Obsidian.
+  </Accordion>
+
+  <Accordion title="Duplicate block notes in the vault">
+    **Cause:** The `blockNaming` setting was changed after an initial import. The old notes — named under the previous scheme — are not automatically removed when new ones are created under the new scheme.
+
+    **Fix:**
+    1. Run **Preview import (dry-run)** to see the filenames Tetromino will create under the new naming setting.
+    2. Manually delete the old block notes that used the previous naming format. Use Obsidian's file explorer or the search panel to locate them.
+    3. Run **Import all channels now** to recreate all notes with the new filenames.
+
+    <Tip>
+      Decide on a `blockNaming` value before your first real import and stick
+      with it. Changing naming conventions after a large import requires
+      manual cleanup. `title-id` is the safest choice for large channels where
+      block title uniqueness is not guaranteed.
+    </Tip>
+  </Accordion>
+
+  <Accordion title="Template changes are not applying">
+    **Cause:** Obsidian was not restarted after editing `data.json`, or `templateEnabled` is not set to `true`.
+
+    **Fix:**
+    1. Confirm that `data.json` at `.obsidian/plugins/tetromino/data.json` contains `"templateEnabled": true`.
+    2. Confirm your `templateString` value is valid JSON (all newlines escaped as `\n`, all double-quote characters inside the template escaped as `\"`).
+    3. **Restart Obsidian completely.** Changes to `data.json` are not picked up by a running Obsidian instance — a full quit and relaunch is required.
+    4. After restarting, run **Preview import (dry-run)** to verify the template is being applied before committing a full import.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  For hard-to-reproduce issues, enable verbose logging by setting
+  `"debugLogging": true` in **Settings → Community Plugins → Tetromino** (or
+  directly in `data.json`). Then open the browser console with
+  **Ctrl/Cmd+Shift+I** in Obsidian desktop and reproduce the problem. The
+  console output includes API request details, block processing steps, and file
+  write decisions that can pinpoint the root cause.
+
+  If you cannot resolve an issue with these steps, open a bug report at
+  [https://github.com/frostmute/Tetromino/issues](https://github.com/frostmute/Tetromino/issues)
+  and include the relevant console output.
+</Note>

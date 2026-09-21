@@ -1,0 +1,96 @@
+---
+title: "Organize Imported Bookmarks with Folder Strategies"
+sidebarTitle: "Folder Organization"
+description: "Learn the four folder strategies Make It Rain supports — hierarchy mirroring, collections-only, single inbox, and folder notes — and choose the right one for your vault."
+---
+
+Make It Rain gives you several strategies for deciding where imported bookmarks land in your vault. You can mirror your entire Raindrop.io Group and Collection hierarchy automatically, flatten it to collections only, funnel everything into a single inbox folder, or generate index notes that turn each collection folder into a navigable hub. This guide explains each approach, when to use it, and which settings control it.
+
+## Mirror Raindrop's Hierarchy (Default)
+
+When `includeGroupInFolderPath` is enabled — which it is by default — Make It Rain replicates your Raindrop.io structure exactly. Each Group becomes a parent folder and each Collection becomes a sub-folder inside it.
+
+For example, if your Raindrop account has:
+
+```
+Group: CORE KNOWLEDGE
+  └── Collection: Web Development
+      └── Collection: JavaScript
+```
+
+…and your `defaultFolder` is set to `Bookmarks`, imports land at:
+
+```
+Bookmarks/CORE KNOWLEDGE/Web Development/JavaScript/
+```
+
+**Best for:** Users who have invested time organizing Raindrop.io into a deliberate Group and Collection hierarchy and want their vault to reflect it without any manual folder creation.
+
+<Tip>
+  Sub-folders are created automatically at import time. You don't need to create the Group or Collection folders in your vault ahead of time.
+</Tip>
+
+## Collections Only (Flat Groups)
+
+Disable `includeGroupInFolderPath` to skip the Group level entirely. Each Collection becomes a direct sub-folder of your `defaultFolder`, regardless of which Group it belongs to in Raindrop.io.
+
+Using the same example as above, imports land at:
+
+```
+Bookmarks/JavaScript/
+```
+
+To disable group mirroring: go to **Settings → Make It Rain** and turn off **Include Group in Folder Path**.
+
+**Best for:** Users with many Raindrop Groups who want a shallower vault structure, or those whose Groups are administrative containers rather than meaningful categories.
+
+## Single Folder for Everything
+
+Set `defaultFolder` to a single path and disable `includeGroupInFolderPath`. Every imported bookmark, regardless of its Raindrop collection, lands in that one folder.
+
+```
+Inbox/Raindrops/
+  ├── Understanding React Hooks.md
+  ├── The History of Typography.md
+  └── NASA Hubble Image Archive.md
+```
+
+**Best for:** Minimalists who process all imports manually, GTD-style inboxes where bookmarks are triaged after import, or users who rely on tags and Dataview rather than folder structure to organize content.
+
+<Note>
+  With all bookmarks in one folder, rich YAML frontmatter fields like `collectionTitle`, `collectionPath`, and `tags` become especially useful. Dataview can group and filter by these fields even when the physical folder structure is flat.
+</Note>
+
+## Folder Notes as Collection Indexes
+
+Enable `createFolderNotes` to generate an index note inside each collection folder at import time. The index note is named after the folder (e.g., `Web Development.md` inside the `Web Development/` folder) and lists all items in the collection with internal links.
+
+To enable: go to **Settings → Make It Rain** and turn on **Create Folder Notes**.
+
+**Best for:** Users with large, deep collections who want an easy entry point for navigating to any item in a collection without searching or scrolling through a file explorer. Works especially well with the Obsidian Banners plugin — set a cover image on the folder note for a visual collection overview.
+
+<Note>
+  Folder notes are regenerated on each import for the collections that were fetched. If you edit a folder note manually, be aware that re-importing the same collection may overwrite your changes. Keep custom content in a separate note linked from the folder note.
+</Note>
+
+## Per-Import Path Override
+
+In the bulk import modal (opened via **Fetch Raindrops (Filtered)**), you can set a one-off vault path in the **Save Location** field. This overrides `defaultFolder` for that single import run only — your saved setting is unchanged.
+
+This is useful for:
+- Importing a temporary research collection into a project-specific folder
+- Testing a new folder structure without committing to it in settings
+- Keeping a special collection separate from your main bookmark hierarchy
+
+## Strategy Comparison
+
+| Strategy | Key Setting | Best For |
+|---|---|---|
+| Mirror Raindrop hierarchy | `includeGroupInFolderPath: true` | Organized Raindrop users |
+| Collections only | `includeGroupInFolderPath: false` | Flatter vault structure |
+| Single inbox folder | `defaultFolder` + no mirroring | Minimalists, GTD inboxes |
+| Folder notes enabled | `createFolderNotes: true` | Navigation-heavy vaults |
+
+<Tip>
+  These strategies are not mutually exclusive. You can combine hierarchy mirroring with folder notes, or use a single inbox with folder notes disabled and rely entirely on Dataview for navigation. Start with the default (hierarchy mirroring) and adjust as you learn how you actually use your imported bookmarks.
+</Tip>

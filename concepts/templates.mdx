@@ -1,0 +1,195 @@
+---
+title: "Template Engine: Customize Your Bookmark Notes"
+sidebarTitle: "Templates"
+description: "Use Make It Rain's Handlebars-like template engine to control the Markdown structure, frontmatter fields, and content of every imported bookmark note."
+---
+
+Make It Rain ships with a built-in Handlebars-like template engine that gives you full control over how imported bookmarks look as Obsidian notes. Rather than accepting a fixed note structure, you can write templates that precisely define frontmatter fields, heading layout, highlight formatting, and conditional sections — and apply different templates to different content types. This page covers the template syntax, per-type templates, template inheritance, and the complete variable reference.
+
+## Template Syntax
+
+Templates are plain text files with `{{double-brace}}` expressions. Make It Rain supports variables, conditionals, loops, and helper functions.
+
+### Variables
+
+Insert any template variable directly with `{{variableName}}`:
+
+```handlebars
+# {{title}}
+
+Source: {{link}}
+Domain: {{domain}}
+```
+
+### Conditionals
+
+Use `{{#if condition}}` to render a section only when a value is present. Add an optional `{{else}}` branch for the fallback case:
+
+```handlebars
+{{#if excerpt}}
+> {{excerpt}}
+{{else}}
+*No description available.*
+{{/if}}
+```
+
+### Loops
+
+Use `{{#each array}}` to iterate over arrays. Inside the loop, access the current item's properties directly, or use `{{this}}` for scalar values:
+
+```handlebars
+{{#each tags}}
+- {{this}}
+{{/each}}
+
+{{#each highlights}}
+- {{text}}{{#if note}} — *{{note}}*{{/if}}
+{{/each}}
+```
+
+### Helpers
+
+Four built-in helpers transform string values inline:
+
+| Helper | Example | Output |
+|---|---|---|
+| `uppercase` | `{{uppercase title}}` | `THE ILLUSTRATED TRANSFORMER` |
+| `lowercase` | `{{lowercase domain}}` | `jalammar.github.io` |
+| `titlecase` | `{{titlecase collectionTitle}}` | `Ai Papers` |
+| `truncate N` | `{{truncate excerpt 200}}` | First 200 characters of `excerpt` |
+
+### Complete Example Template
+
+Here is a full working template you can paste directly into the Make It Rain template editor:
+
+```handlebars
+---
+title: "{{title}}"
+url: "{{link}}"
+tags: [{{formattedTags}}]
+created: {{formattedCreatedDate}}
+collection: "{{collectionTitle}}"
+{{#if cover}}{{bannerFieldName}}: "{{cover}}"{{/if}}
+---
+
+# {{title}}
+
+{{#if excerpt}}
+> {{excerpt}}
+{{/if}}
+
+{{#if scrapedContent}}
+## Article Content
+
+{{scrapedContent}}
+{{/if}}
+
+{{#if highlights}}
+## Highlights
+
+{{#each highlights}}
+- {{this.text}}{{#if this.note}} — *{{this.note}}*{{/if}}
+{{/each}}
+{{/if}}
+
+{{#if note}}
+## My Notes
+
+{{note}}
+{{/if}}
+```
+
+## Per-Content-Type Templates
+
+Make It Rain maintains a separate template for each of the seven Raindrop content types:
+
+| Type | When used |
+|---|---|
+| `link` | Generic web links |
+| `article` | Readable articles (Raindrop's article parser detected content) |
+| `image` | Direct image URLs |
+| `video` | Video links (YouTube, Vimeo, etc.) |
+| `document` | PDFs and other document files |
+| `audio` | Audio file links |
+| `book` | Books (often from Google Books or similar) |
+
+Each content-type template can be individually **enabled or disabled** in Settings → Templates. When a type's template is disabled, Make It Rain falls back to the default template. You can also force all imports to use the default template by toggling **Use default template** on in the Fetch modal — useful for a one-off import where per-type customization is not needed.
+
+## Named Templates and Inheritance
+
+For larger template setups, Make It Rain supports named templates, template inheritance, and partials. This lets you define a shared base layout and override only the sections that differ per content type.
+
+**Named templates** are templates you save under a name in Settings → Templates → Named Templates. Reference them by name in `{{#extends}}` or `{{#include}}`.
+
+**Inheritance** lets a child template extend a parent, overriding specific `{{#block}}` slots:
+
+```handlebars
+{{! base template (named "base") }}
+---
+title: "{{title}}"
+url: "{{link}}"
+tags: [{{formattedTags}}]
+---
+
+# {{title}}
+
+{{#block "body"}}
+{{excerpt}}
+{{/block}}
+```
+
+```handlebars
+{{! article template — extends "base" }}
+{{#extends "base"}}
+{{#block "body"}}
+{{#if scrapedContent}}
+{{scrapedContent}}
+{{else}}
+{{excerpt}}
+{{/if}}
+{{/block}}
+{{/extends}}
+```
+
+**Partials** let you `{{#include "name"}}` a named template inline, useful for reusable snippets like a highlight block or a standard footer:
+
+```handlebars
+{{#include "highlights-partial"}}
+```
+
+Inheritance chains are limited to 10 levels deep to prevent circular references.
+
+## Template Variables Reference
+
+All variables below are available inside any template. Array variables (`tags`, `highlights`) are intended for use inside `{{#each}}` loops.
+
+| Variable | Description |
+|---|---|
+| `title` | Bookmark title |
+| `id` | Raindrop item ID (numeric) |
+| `link` | Original URL |
+| `cover` | Cover image URL |
+| `excerpt` | Short description or excerpt from the page |
+| `note` | Your personal note on the bookmark in Raindrop |
+| `created` | ISO 8601 creation timestamp |
+| `lastupdate` | ISO 8601 last-updated timestamp |
+| `formattedCreatedDate` | Human-readable creation date |
+| `formattedUpdatedDate` | Human-readable last-updated date |
+| `type` | Content type: `link`, `article`, `image`, `video`, `document`, `audio`, or `book` |
+| `collectionTitle` | Name of the bookmark's collection |
+| `collectionPath` | Full slash-separated collection path (e.g. `Tech Reading/AI Papers`) |
+| `collectionGroup` | Name of the parent group |
+| `collectionParentId` | Numeric ID of the parent collection, if any |
+| `tags` | Array of tag strings |
+| `formattedTags` | Tags as a comma-separated string, ready for inline YAML arrays |
+| `highlights` | Array of highlight objects: `{text, note, color, created}` |
+| `domain` | Source domain extracted from `link` (e.g. `github.com`) |
+| `renderedType` | Human-readable content type label |
+| `scrapedContent` | Full article text extracted via archive scraping (requires `archiveScraping` enabled) |
+| `localFile` | Obsidian wiki-link to the locally downloaded file (e.g. `[[my-paper.pdf]]`) |
+| `localEmbed` | Obsidian embed syntax for the local file (e.g. `![[my-paper.pdf]]`) |
+| `bannerFieldName` | The configured frontmatter field name for banner images (default: `banner`) |
+
+<Tip>
+  Use the **Template Preview** button in Settings → Templates to render any template against a sample Raindrop item before running a real import. This lets you catch syntax errors and verify formatting without writing any notes to your vault.
+</Tip>

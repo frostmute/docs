@@ -1,0 +1,92 @@
+---
+title: "Vault Folder Structure from Raindrop Collections"
+sidebarTitle: "Collections & Folders"
+description: "Understand how Make It Rain maps Raindrop.io groups, collections, and subcollections to vault folders, and how to control the output structure."
+---
+
+Make It Rain mirrors your Raindrop.io organizational hierarchy directly into your Obsidian vault as a folder tree. This page explains how Raindrop's three-level structure — groups, collections, and subcollections — translates to vault folders, what the available configuration options do, and how folder notes can give each collection its own index page.
+
+## Raindrop Hierarchy
+
+Raindrop.io organizes bookmarks in three tiers. At the top, **Groups** are named sections in your sidebar (like "Tech Reading" or "Personal"). Each group contains one or more **Collections**, and collections can have nested **Subcollections**. Individual bookmarks, called Raindrops, live inside collections.
+
+```
+Raindrop.io
+└── Group: Tech Reading
+    ├── Collection: AI Papers
+    └── Collection: Dev Tools
+        └── Collection: IDEs  (subcollection)
+```
+
+Make It Rain traverses this entire hierarchy at import time so it can reconstruct the correct folder path for every note it writes.
+
+## Default Folder Mapping
+
+With `includeGroupInFolderPath` enabled (the default), Make It Rain creates a vault folder structure that mirrors the Raindrop hierarchy exactly. Each tier in Raindrop becomes a nested folder in your vault:
+
+```
+Vault/
+└── Tech Reading/
+    ├── AI Papers/
+    │   └── The Illustrated Transformer.md
+    └── Dev Tools/
+        └── IDEs/
+            └── VS Code Review.md
+```
+
+This means a bookmark saved in the `IDEs` subcollection (inside `Dev Tools`, inside the `Tech Reading` group) lands at `Tech Reading/Dev Tools/IDEs/VS Code Review.md`. The full path is constructed automatically from the collection hierarchy fetched at the start of every import.
+
+## Without Group Folders
+
+If you set `includeGroupInFolderPath` to **off** in Settings, the group tier is flattened out. Only collection names and subcollection names become folders — the group name is dropped entirely:
+
+```
+Vault/
+└── AI Papers/
+    └── The Illustrated Transformer.md
+└── Dev Tools/
+    └── IDEs/
+        └── VS Code Review.md
+```
+
+This is useful if your group names are generic organizers (like "Starred" or "All") that you do not want polluting your vault's top-level folder list.
+
+## Folder Notes
+
+When the `createFolderNotes` setting is enabled, Make It Rain generates an index note inside each collection folder after the import completes. The index note shares its name with the folder (e.g., `Dev Tools/Dev Tools.md`) and contains a YAML frontmatter block plus a linked list of every note in that collection.
+
+A generated folder note looks like this:
+
+```markdown
+---
+title: Dev Tools
+type: collection
+---
+# Dev Tools
+
+## Collection Contents
+
+- [[Homebrew Package Manager]]
+- [[VS Code Review]]
+- [[Warp Terminal]]
+```
+
+The list is sorted alphabetically and uses Obsidian wiki-link syntax so every item is clickable in Graph View. If the folder note already exists from a previous import, Make It Rain overwrites it with the current contents of the folder, keeping the index up to date.
+
+## Default Folder
+
+The `defaultFolder` setting lets you place all imports under a specific subfolder of your vault rather than at the vault root. For example, setting `defaultFolder` to `Bookmarks` would produce:
+
+```
+Vault/
+└── Bookmarks/
+    └── Tech Reading/
+        └── AI Papers/
+            └── The Illustrated Transformer.md
+```
+
+You can override `defaultFolder` for any individual import run by entering a different path in the Fetch modal's **Vault Path** field. Saved presets also store their own vault path, so different presets can target different parts of your vault simultaneously.
+
+<Tip>
+  Use the **Default Folder** setting to keep all imported bookmarks under a single top-level folder like `Bookmarks/` or `Raindrop/`. This makes it easy to exclude the folder from searches, apply a targeted Dataview query across all imported notes, or move the entire import tree without affecting the rest of your vault.
+</Tip>

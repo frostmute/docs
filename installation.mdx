@@ -1,0 +1,96 @@
+---
+title: "Installing Make It Rain in Obsidian"
+sidebarTitle: "Installation"
+description: "Install Make It Rain via the Obsidian Community Plugins browser or manually from GitHub, with step-by-step instructions for both methods."
+---
+
+Make It Rain is distributed as a standard Obsidian community plugin. This page covers both installation methods — the recommended in-app browser and a manual approach for users who prefer to manage plugin files directly. After installation, continue to the [Quickstart](/quickstart) to connect your Raindrop.io account and run your first import.
+
+<Note>
+  Make It Rain requires **Obsidian 1.13.0 or later**. Open **Help → About** in Obsidian to check your version. If you're running an older release, update Obsidian before proceeding.
+</Note>
+
+<Tabs>
+  <Tab title="Community Plugin Browser (Recommended)">
+    The Community Plugins browser handles downloading, installing, and keeping the plugin up to date automatically. This is the easiest method for most users.
+
+    <Steps>
+      <Step title="Open Community Plugins settings">
+        Launch Obsidian and open **Settings** (gear icon in the left sidebar or `Ctrl/Cmd+,`). In the left panel, click **Community Plugins**.
+      </Step>
+      <Step title="Disable Safe Mode if prompted">
+        If you see a **Safe Mode** toggle that is turned on, click **Turn on community plugins** to disable Safe Mode. Obsidian requires this before any community plugin can be installed.
+      </Step>
+      <Step title="Browse for Make It Rain">
+        Click the **Browse** button to open the Community Plugins browser. In the search field, type **Make It Rain**. The plugin by **frostmute** should appear at the top of the results.
+      </Step>
+      <Step title="Install and enable">
+        Click the **Make It Rain** result to open its detail page, then click **Install**. Once installation finishes, click **Enable** to activate the plugin. You can also enable it later from the Installed Plugins list.
+      </Step>
+    </Steps>
+
+    Once enabled, a cloud-download icon appears in the Obsidian ribbon and a **Make It Rain** section is added to Settings. You're ready to configure your API token.
+  </Tab>
+
+  <Tab title="Manual Installation">
+    Manual installation is useful if you are working in an air-gapped environment, prefer to pin a specific release version, or are testing a pre-release build.
+
+    <Steps>
+      <Step title="Download the release files">
+        Go to the [Make It Rain releases page](https://github.com/frostmute/make-it-rain/releases/latest) on GitHub. Under the **Assets** section of the latest release, download these three files:
+
+        - `main.js`
+        - `manifest.json`
+        - `styles.css`
+      </Step>
+      <Step title="Create the plugin folder">
+        Navigate to your Obsidian vault folder in your file system. Open the hidden `.obsidian` folder, then open (or create) the `plugins` folder inside it. Create a new subfolder named exactly:
+
+        ```
+        make-it-rain
+        ```
+
+        The full path should look like:
+
+        ```
+        <your-vault>/.obsidian/plugins/make-it-rain/
+        ```
+      </Step>
+      <Step title="Copy the plugin files">
+        Move the three downloaded files — `main.js`, `manifest.json`, and `styles.css` — into the `make-it-rain` folder you just created.
+      </Step>
+      <Step title="Reload Obsidian">
+        Restart Obsidian completely, or use the Command Palette to run **Reload app without saving** if you have that option available.
+      </Step>
+      <Step title="Enable the plugin">
+        Open **Settings → Community Plugins**. Make It Rain should appear in the **Installed Plugins** list. Toggle it on to enable it.
+      </Step>
+    </Steps>
+
+    <Warning>
+      When you install manually, Obsidian will not notify you of new releases. Check the [releases page](https://github.com/frostmute/make-it-rain/releases) periodically and repeat the steps above to update.
+    </Warning>
+  </Tab>
+</Tabs>
+
+## Desktop and mobile support
+
+<Note>
+  Make It Rain works on both **Obsidian Desktop** (Windows, macOS, Linux) and **Obsidian Mobile** (iOS and Android). The full feature set — including file downloads, Safe Sync, and template editing — is available on all platforms.
+</Note>
+
+## What's installed
+
+After enabling the plugin, you'll find:
+
+- A **cloud-download ribbon icon** in the left sidebar for quick access to the import modal (can be hidden in settings).
+- A **Make It Rain** section in Obsidian Settings where you enter your API token and configure defaults.
+- New entries in the **Command Palette** including *Fetch Raindrops (Filtered)*, *Quick Import by URL or ID*, *Aggregate Highlights by Tag*, and *Safe Sync: scan for deleted/renamed Raindrops*.
+
+## Next step
+
+Now that Make It Rain is installed, connect it to your Raindrop.io account and run your first import.
+
+<Card title="Quickstart" icon="bolt" href="/quickstart">
+  Generate your API token, configure Make It Rain, and import your first bookmarks in under five minutes.
+</Card>

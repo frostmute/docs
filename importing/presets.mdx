@@ -1,0 +1,62 @@
+---
+title: "Save and Reuse Import Configurations with Presets"
+sidebarTitle: "Presets"
+description: "Save any combination of collection, tag, type, and path filters as a named preset and re-run it instantly from the command palette."
+---
+
+Import presets let you capture a complete Bulk Import configuration — collections, tags, content type, vault path, and all other filter options — under a name you choose, then replay that exact import in one step. Every saved preset gets its own entry in the command palette, so a workflow you run daily becomes a single keystroke. This page explains how to create, run, and manage presets.
+
+## Creating a Preset
+
+<Steps>
+  <Step title="Open the Bulk Import modal">
+    Press `Ctrl+P` (Windows/Linux) or `Cmd+P` (macOS) and run **Fetch raindrops (filtered)**, or click the cloud-download ribbon icon in the sidebar.
+  </Step>
+  <Step title="Configure your filters">
+    Set the collections, tags, content type, vault path, and any other options exactly as you want them for this preset. All fields in the **Source**, **Filters**, and **Note Formatting** sections are captured.
+  </Step>
+  <Step title="Click 'Save current as preset'">
+    In the **Presets** section at the top of the modal, click the **Save current as preset** button (the floppy-disk icon).
+  </Step>
+  <Step title="Give the preset a name">
+    A small dialog asks for a name. Choose something descriptive that identifies the workflow — for example, `Morning Reading` or `Dev Links`. Click **Save**.
+  </Step>
+  <Step title="Confirm the preset is registered">
+    A confirmation notice appears and the new preset is immediately available in the **Import preset** dropdown and in the command palette. If you update a preset with the same name, its command-palette binding remains stable.
+  </Step>
+</Steps>
+
+## Running a Preset
+
+Once a preset is saved, you have two ways to run it:
+
+**From the command palette (fastest):**
+Open the command palette and search for the preset name. Make It Rain registers a dedicated command for every saved preset, named **Fetch: [your preset name]**. Select it and the import runs immediately with no modal required.
+
+```
+Fetch: Morning Reading
+Fetch: Dev Links
+Fetch: Research — Papers
+```
+
+**From the import modal:**
+Open the Bulk Import modal and choose your preset from the **Import preset** dropdown at the top. All filter fields are filled in automatically with the preset's saved values. You can adjust individual fields before clicking **Start Import**, and those one-off changes do not overwrite the saved preset unless you explicitly save again.
+
+## Managing Presets
+
+Presets are stored in your Make It Rain plugin settings and can be managed directly from the **Import preset** section of the Bulk Import modal:
+
+- **Rename or update:** Load the preset from the dropdown, adjust the fields you want to change, click **Save current as preset**, and enter the same name. Make It Rain updates the existing preset in place without changing its command-palette binding.
+- **Delete:** Select the preset in the dropdown and click the **Delete preset** button (the trash icon). The command-palette entry is removed immediately.
+
+You can also review and edit raw preset data in **Settings → Make It Rain → Import Presets**, which lists all saved presets and lets you remove them if needed.
+
+<Tip>
+  Create presets that match your distinct workflows rather than trying to cover everything with one. For example:
+
+  - **Morning Reading** — Articles type, `reading` tag, saved to `Inbox/Reading`
+  - **Research** — All types, `research` tag (AND match), saved to `Research/Sources`
+  - **Dev Bookmarks** — Links type, `dev` tag, saved to `Dev/Links`
+
+  Each runs in one command-palette step, and because they each target a specific folder, your vault stays organised automatically.
+</Tip>

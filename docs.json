@@ -1,72 +1,116 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "theme": "almond",
+  "name": "Frostmute",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#2463ec",
+    "light": "#2463ec",
+    "dark": "#2463ec"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "https://media.brand.dev/72ebad0d-8985-407f-9f2b-65fe0d7f4ef1.png",
   "navigation": {
-    "pages": [
+    "tabs": [
       {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
+        "tab": "Make It Rain",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "installation"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/how-it-works",
+              "concepts/collections-and-folders",
+              "concepts/templates",
+              "concepts/safe-sync"
+            ]
+          },
+          {
+            "group": "Importing Bookmarks",
+            "pages": [
+              "importing/bulk-import",
+              "importing/quick-import",
+              "importing/highlights",
+              "importing/presets"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "configuration/settings",
+              "configuration/templates",
+              "configuration/file-downloads"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/obsidian-setup",
+              "guides/raindrop-authentication",
+              "guides/folder-organization",
+              "guides/sharing-templates",
+              "guides/troubleshooting"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Tetromino",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "tetromino/introduction",
+              "tetromino/quickstart"
+            ]
+          },
+          {
+            "group": "Importing Channels",
+            "pages": [
+              "tetromino/channels",
+              "tetromino/blocks",
+              "tetromino/dry-run",
+              "tetromino/attachments"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "tetromino/settings",
+              "tetromino/templates",
+              "tetromino/auto-sync"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "tetromino/troubleshooting"
+            ]
+          }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    ]
   },
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "GitHub",
+        "href": "https://github.com/frostmute/make-it-rain"
       }
     ],
     "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "type": "github",
+      "href": "https://github.com/frostmute/make-it-rain"
     }
-  },
-  "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
-    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/frostmute"
     }
   }
 }

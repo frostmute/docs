@@ -1,0 +1,62 @@
+---
+title: "Preview Imports Before Writing with Dry-Run Mode"
+sidebarTitle: "Dry-Run Preview"
+description: "Use Tetromino's dry-run mode to preview every file that would be created, updated, or deleted — with line-by-line diffs — before writing anything."
+---
+
+Tetromino's dry-run mode lets you preview exactly what would change in your vault before committing to a full import. No files are created, updated, or deleted during a dry-run — Tetromino fetches all channel data from Are.na, computes the planned output, compares it against your current vault, and shows you a detailed summary. This makes dry-run the right first step before any large import, and a safe way to check what has changed since your last sync.
+
+## Running a Dry-Run
+
+<Steps>
+  <Step title="Open the command palette">
+    Press `Ctrl/Cmd+P` to open the Obsidian command palette.
+  </Step>
+  <Step title="Run Preview import (dry-run)">
+    Search for and select **Preview import (dry-run)**. Tetromino begins fetching channel data from Are.na for all enabled channel mappings.
+  </Step>
+  <Step title="Wait for the fetch to complete">
+    Tetromino retrieves all blocks across all enabled channels, including paginated results. For large channels this may take a few seconds. Progress is shown in the Obsidian status bar.
+  </Step>
+  <Step title="Review the sync summary modal">
+    When the fetch and comparison are complete, the sync summary modal opens. No files have been written to your vault at this point.
+  </Step>
+</Steps>
+
+## The Sync Summary Modal
+
+The sync summary modal shows a breakdown of what a real import would do:
+
+| Category | Meaning |
+|---|---|
+| **Created** | Notes that don't yet exist in your vault and would be created |
+| **Updated** | Existing notes whose Are.na content has changed since the last import |
+| **Unchanged** | Notes whose local content already matches Are.na — no action needed |
+| **Errors** | Any blocks that couldn't be fetched or processed |
+
+For any file in the **Updated** list, click the filename to open the diff viewer. The diff shows a line-by-line comparison of the current vault content (before) and the planned new content (after), so you can see exactly what would change.
+
+After reviewing the dry-run summary, you have two choices:
+
+- **Close the modal** — nothing is written; return to the command palette and run **Import all channels now** when you're ready.
+- **Confirm the import** — if the modal includes a "Run import" action, you can proceed directly from the summary.
+
+## Per-Channel Dry-Run
+
+You can preview a single channel instead of all enabled channels:
+
+<Steps>
+  <Step title="Open a note inside the channel folder">
+    Navigate to any note within the vault folder that a channel maps to (for example, open a block note inside `Are.na/my-research-channel/`).
+  </Step>
+  <Step title="Run the per-channel preview command">
+    Open the command palette and select **Preview current channel import (dry-run)**. Tetromino identifies the channel from the active note's file path and previews only that channel.
+  </Step>
+  <Step title="Review the sync summary">
+    The sync summary modal shows results scoped to the single channel. The diff viewer works identically to the full dry-run.
+  </Step>
+</Steps>
+
+<Note>
+  Dry-runs are not recorded in `Are.na/import-history.md`. Only completed real imports are logged there. Use dry-run as often as you like without affecting your import history.
+</Note>

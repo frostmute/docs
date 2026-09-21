@@ -1,0 +1,225 @@
+---
+title: "Tetromino Settings Reference"
+sidebarTitle: "Settings"
+description: "Complete reference for every Tetromino setting — API token, block naming, attachment handling, enrichment options, and sync behavior."
+---
+
+Tetromino's settings are available under **Obsidian Settings → Community Plugins → Tetromino**. This page documents every option in full, grouped by function, so you can quickly find the setting that controls the behavior you want to change.
+
+## Authentication
+
+<ParamField path="apiToken" type="string" required>
+  Your Are.na personal access token. Tetromino uses this to authenticate all
+  requests to the Are.na API.
+
+  Generate a token at [https://dev.are.na/oauth/applications](https://dev.are.na/oauth/applications),
+  then paste it into the **API Token** field and click **Verify** to confirm it works.
+
+  <Warning>
+    Keep your token private. It grants read access to your Are.na account,
+    including private channels. Tetromino stores it in Obsidian plugin data
+    and masks it in the UI.
+  </Warning>
+</ParamField>
+
+## Content Rendering
+
+<ParamField path="blockNaming" type='"title" | "id" | "title-id"' default="title">
+  Controls the filename Tetromino uses for each block note.
+
+  | Value | Filename format | Example |
+  |---|---|---|
+  | `title` | Block title only | `My Interesting Link.md` |
+  | `id` | Are.na block ID only | `12345678.md` |
+  | `title-id` | Title and ID combined | `My Interesting Link-12345678.md` |
+
+  <Tip>
+    Use `title-id` if you have many blocks with similar or identical titles — the
+    ID suffix guarantees uniqueness and makes deduplication straightforward.
+  </Tip>
+</ParamField>
+
+<ParamField path="frontmatterEnabled" type="boolean" default="true">
+  Include YAML frontmatter in every block note. When enabled, each note opens
+  with a frontmatter block containing fields like `arena_id`, `arena_type`,
+  `arena_url`, and any optional enrichment fields you have turned on.
+
+  Disable this only if you are using a fully custom template that generates its
+  own frontmatter or requires none at all.
+</ParamField>
+
+<ParamField path="excludeClasses" type="string[]" default="[]">
+  A list of Are.na block classes to skip entirely during import. Any block whose
+  class matches an entry in this list is ignored — no note is created and no
+  attachment is downloaded.
+
+  Valid values: `Text`, `Image`, `Link`, `Attachment`, `Media`, `Channel`.
+
+  **Example:** Set to `["Image", "Attachment"]` to import only text and link
+  blocks while skipping all media.
+</ParamField>
+
+<ParamField path="channelIndexNoteStyle" type='"index" | "folder-name"' default="index">
+  Controls the filename Tetromino uses for the per-channel index note inside
+  each channel folder.
+
+  | Value | Generated file |
+  |---|---|
+  | `index` | `Are.na/<channel-slug>/index.md` |
+  | `folder-name` | `Are.na/<channel-slug>/<channel-slug>.md` |
+
+  Use `folder-name` if you rely on the [Folder Notes](https://github.com/LostPaul/obsidian-folder-notes)
+  plugin, which expects the index note to share its name with the folder.
+</ParamField>
+
+## Image & Attachment Handling
+
+<ParamField path="imageHandling" type='"download" | "embed" | "link"' default="download">
+  Determines how image blocks are rendered in your vault.
+
+  | Value | Behavior |
+  |---|---|
+  | `download` | Download the image file to your attachment folder and insert a local embed |
+  | `embed` | Insert a remote `![](url)` embed pointing to the Are.na CDN |
+  | `link` | Insert a plain hyperlink to the image URL |
+
+  `download` is the most reliable mode for long-term archival because it does
+  not depend on the Are.na CDN remaining available.
+</ParamField>
+
+<ParamField path="attachmentHandling" type='"download" | "link"' default="download">
+  Determines how non-image file attachments (PDFs, documents, etc.) are handled.
+
+  | Value | Behavior |
+  |---|---|
+  | `download` | Download the file to your attachment folder |
+  | `link` | Insert a hyperlink to the remote file URL |
+</ParamField>
+
+<ParamField path="downloadedAttachmentLinkStyle" type='"link" | "embed"' default="link">
+  Controls how downloaded files are referenced inside block notes.
+
+  | Value | Markdown produced |
+  |---|---|
+  | `link` | `[[filename.pdf]]` — opens the file on click |
+  | `embed` | `![[filename.pdf]]` — embeds the file inline |
+</ParamField>
+
+<ParamField path="attachmentStorage" type='"global" | "channel" | "custom"' default="global">
+  Where downloaded files are saved inside your vault.
+
+  | Value | Storage location |
+  |---|---|
+  | `global` | Single shared folder for all channels (see `globalAttachmentFolder`) |
+  | `channel` | Inside the channel's own folder alongside its block notes |
+  | `custom` | A folder you specify with `customAttachmentFolder` |
+</ParamField>
+
+<ParamField path="globalAttachmentFolder" type="string" default="Are.na/Attachments">
+  The vault path used for global attachment storage. Only applies when
+  `attachmentStorage` is set to `global`.
+
+  Use forward slashes for nested paths, e.g. `Resources/Are.na/Media`.
+</ParamField>
+
+<ParamField path="customAttachmentFolder" type="string" default='""'>
+  The vault path used when `attachmentStorage` is set to `custom`. Leave blank
+  when using `global` or `channel` storage modes.
+</ParamField>
+
+## Block Enrichment
+
+<ParamField path="bannerFieldEnabled" type="boolean" default="false">
+  Add a `banner` frontmatter field containing the block's image URL. This is
+  compatible with the [Obsidian Banners](https://github.com/noatpad/obsidian-banners)
+  plugin, which renders the image as a full-width banner at the top of the note.
+</ParamField>
+
+<ParamField path="bannerFieldName" type="string" default="banner">
+  The YAML key used for the banner frontmatter field. Change this if your
+  Banners plugin is configured to look for a different field name, or if you
+  want to avoid conflicts with other plugins.
+</ParamField>
+
+<ParamField path="bannerImagePriority" type='"thumb-first" | "display-first"' default="thumb-first">
+  When a block has multiple image sizes available, this setting controls which
+  URL Tetromino writes to the banner field.
+
+  | Value | Behavior |
+  |---|---|
+  | `thumb-first` | Prefer the thumbnail image; fall back to display image |
+  | `display-first` | Prefer the display (larger) image; fall back to thumbnail |
+</ParamField>
+
+<ParamField path="includeBlockDescriptionFrontmatter" type="boolean" default="false">
+  Add an `arena_description` field to the note's YAML frontmatter containing
+  the block's description text. Useful for querying notes with Dataview.
+</ParamField>
+
+<ParamField path="includeBlockComments" type="boolean" default="false">
+  Import Are.na block comments into the note body under a **Comments** section.
+  Each comment appears as a list item with its author and content.
+</ParamField>
+
+<ParamField path="includeBlockConnectedChannels" type="boolean" default="false">
+  Add a **This block appears in** section at the bottom of each block note,
+  listing all other Are.na channels that contain the same block. Each entry
+  links to the channel on Are.na.
+</ParamField>
+
+<ParamField path="includeChannelBlockPreviewImage" type="boolean" default="false">
+  For **Channel**-type blocks (blocks that represent an Are.na channel embedded
+  within another channel), include a best-effort preview image in the note.
+</ParamField>
+
+## Sync Behavior
+
+<ParamField path="syncOnStartup" type="boolean" default="false">
+  Automatically run a full import across all enabled channels every time
+  Obsidian launches. Useful if you open Obsidian infrequently and want your
+  vault to be current when you start a session.
+</ParamField>
+
+<ParamField path="syncInterval" type="number" default="0">
+  Run an automatic import every N minutes while Obsidian is open. Set to `0`
+  to disable repeating syncs entirely.
+
+  Common values: `60` for hourly, `360` for every six hours, `1440` for daily.
+
+  <Warning>
+    Very short intervals (under 5 minutes) may trigger Are.na API rate limits,
+    especially for vaults with many channels or large block counts. Use intervals
+    of 15 minutes or longer for reliable background sync.
+  </Warning>
+</ParamField>
+
+<ParamField path="autoEnableImportedChannels" type="boolean" default="true">
+  When you run **Import my channels** to bulk-create channel mappings from your
+  Are.na account, Tetromino automatically marks each new mapping as enabled.
+  Disable this if you prefer to review and selectively enable channels manually
+  before running your first import.
+</ParamField>
+
+<ParamField path="notifyOnSync" type="boolean" default="true">
+  Show progress toast notifications during import. The notifications report
+  which channel is being processed and summarize the result when the import
+  finishes. Disable for quieter background syncs.
+</ParamField>
+
+<ParamField path="debugLogging" type="boolean" default="false">
+  Enable verbose console logging. When turned on, Tetromino writes detailed
+  output to the browser console (open with **Ctrl/Cmd+Shift+I** in Obsidian
+  desktop) covering API requests, pagination, file comparisons, and write
+  operations. Use this when diagnosing unexpected import behavior.
+</ParamField>
+
+<ParamField path="templateEnabled" type="boolean" default="false">
+  Enable the custom template engine. When active, Tetromino renders block notes
+  using your `templateString` instead of the built-in default output.
+
+  <Note>
+    This setting is not yet exposed in the Settings UI. Enable it by editing
+    `.obsidian/plugins/tetromino/data.json` directly. See the
+    [Templates](/tetromino/templates) page for full setup instructions.
+  </Note>
+</ParamField>

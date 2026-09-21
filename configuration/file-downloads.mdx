@@ -1,0 +1,106 @@
+---
+title: "Download Attachments and Files to Your Vault"
+sidebarTitle: "File Downloads"
+description: "Enable Make It Rain's file download feature to save PDFs, EPUBs, audio, and video from Raindrop bookmarks directly into your Obsidian vault."
+---
+
+When `downloadFiles` is enabled, Make It Rain downloads the actual file attachments from your Raindrop bookmarks — PDFs, EPUBs, audio files, and video files — directly into your vault alongside the imported note. Rather than a note that only links out to an external URL, you get a fully self-contained entry with the original file stored locally and embedded natively in Obsidian.
+
+## Enabling File Downloads
+
+<Steps>
+  <Step title="Open Make It Rain settings">
+    In Obsidian, go to **Settings → Community Plugins** and click the gear icon next to **Make It Rain**.
+  </Step>
+  <Step title="Expand Content Enhancements">
+    Scroll down to the **Content Enhancements** section and expand it.
+  </Step>
+  <Step title="Toggle Download Files on">
+    Enable the **Download files locally** toggle. Make It Rain will now download attachments during your next import.
+  </Step>
+</Steps>
+
+## Supported File Types
+
+Make It Rain downloads files for the following Raindrop content types:
+
+| Content Type | What Gets Downloaded |
+|---|---|
+| **Document** (`doc`) | The PDF or EPUB file attached to the bookmark |
+| **Audio** | The audio file (MP3, AAC, etc.) linked in the Raindrop item |
+| **Video** | The video file linked in the Raindrop item |
+| **Image** | The cover/source image for image-type bookmarks |
+
+Bookmarks of type `link`, `article`, and `book` are unaffected unless they have an explicit file attachment in Raindrop.
+
+<Note>
+  File downloads require a valid direct file URL in the Raindrop.io item. Bookmarks that only contain a web page URL (rather than a direct link to a downloadable file) are unaffected — Make It Rain skips the download step and imports the note as normal.
+</Note>
+
+## How Files Are Stored
+
+Downloaded files are placed in the **same folder as the imported note** by default. If your note is saved at `Bookmarks/Research/My Paper.md`, the downloaded PDF lands at `Bookmarks/Research/My Paper.pdf`.
+
+Two template variables give you access to the downloaded file inside your template:
+
+| Variable | Value |
+|---|---|
+| `{{localFile}}` | The vault-relative path to the downloaded file, e.g. `Bookmarks/Research/My Paper.pdf` |
+| `{{localEmbed}}` | The Obsidian embed syntax for the file, e.g. `![[My Paper.pdf]]` |
+
+Both variables are empty strings when `downloadFiles` is disabled or when no file was downloaded for a given bookmark.
+
+## Using Downloaded Files in Templates
+
+The `{{localEmbed}}` variable lets you create native Obsidian embeds directly in the note body. Here is a minimal document template that embeds the downloaded file:
+
+```handlebars
+{{#extends "base"}}
+{{#block 'localEmbed'}}
+{{#if localEmbed}}
+## Attachment
+{{localEmbed}}
+{{/if}}
+{{/block}}
+{{/extends}}
+```
+
+This renders as:
+
+```markdown
+## Attachment
+![[My Document.pdf]]
+```
+
+Obsidian renders `![[My Document.pdf]]` as a native inline PDF viewer (or audio/video player for media files), so you can read or play the attachment without leaving the note.
+
+If you need the raw path instead — for example to build a custom Markdown link — use `{{localFile}}`:
+
+```handlebars
+{{#if localFile}}
+[Download]({{localFile}})
+{{/if}}
+```
+
+## Archive Scraping
+
+A related but distinct feature is **Archive Scraping**. Instead of downloading a file, archive scraping fetches the full article text from Raindrop.io's cached web archive and injects it directly into the note body. Enable it by toggling **Archive scraping** on in **Settings → Content Enhancements**.
+
+Archive scraping applies to **article**-type bookmarks and populates the `{{scrapedContent}}` template variable. Use it in any template like this:
+
+```handlebars
+{{#block 'scrapedContent'}}
+{{#if scrapedContent}}
+## Full Article
+{{scrapedContent}}
+{{/if}}
+{{/block}}
+```
+
+<Note>
+  Archive scraping requires a **Raindrop.io Pro** subscription. The feature uses Raindrop's permanent cache, so the text remains available even if the original page goes offline.
+</Note>
+
+<Warning>
+  Downloaded files increase your vault size, sometimes significantly for PDFs, audio, and video. Consider enabling file downloads selectively — for example, only for document-type bookmarks by using the `{{#if localEmbed}}` guard in your document template and leaving it out of link or article templates. You can also keep the toggle off globally and enable it only during specific imports using the bulk import modal.
+</Warning>

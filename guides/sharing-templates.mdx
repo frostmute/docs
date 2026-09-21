@@ -1,0 +1,95 @@
+---
+title: "Share and Import Make It Rain Templates"
+sidebarTitle: "Sharing Templates"
+description: "Export your Make It Rain templates as JSON to share with the community, and import templates others have shared directly from your clipboard into any vault."
+---
+
+Make It Rain's template engine supports exporting and importing templates as portable JSON. This means you can back up a template you've spent time crafting, move it between vaults, or share it with other Make It Rain users via a GitHub Gist, forum post, or Discord message. Importing is equally simple — copy a template JSON from anywhere and paste it directly into the plugin. This guide walks through both directions.
+
+## Exporting a Template
+
+Export sends the full template definition — name, content, and metadata — to your clipboard as JSON. From there you can paste it anywhere.
+
+<Steps>
+  <Step title="Open Make It Rain settings">
+    Go to **Settings → Community Plugins → Make It Rain** and scroll to the **Template Engine** section.
+  </Step>
+  <Step title="Open Manage Templates">
+    Click **Manage templates…** to open the template management dialog.
+  </Step>
+  <Step title="Find the template to export">
+    Locate the template you want to share in the list of named templates.
+  </Step>
+  <Step title="Click Export">
+    Click the **Export** button (copy icon) next to the template. The template JSON is copied to your clipboard instantly.
+  </Step>
+  <Step title="Share the JSON">
+    Paste the clipboard contents into a GitHub Gist, a forum post, a Discord message, or a plain text file. Anyone with the JSON can import it directly into their own vault.
+  </Step>
+</Steps>
+
+The exported JSON follows this structure:
+
+```json
+{
+  "version": 1,
+  "name": "My Article Template",
+  "template": "{{#extends \"base\"}}...{{/extends}}",
+  "description": "Adds scraped content and highlights",
+  "author": "your-name"
+}
+```
+
+<Tip>
+  Always fill in the `description` and `author` fields before sharing. When someone imports your template, these fields help them understand what it does and who made it — especially useful for templates shared publicly in community spaces.
+</Tip>
+
+## Importing a Template
+
+Import reads JSON from your clipboard and adds the template to your named templates list. The plugin rejects imports that would silently overwrite an existing template with the same name.
+
+<Steps>
+  <Step title="Copy the template JSON">
+    Copy the full template JSON to your clipboard — from a Gist, a forum post, a file, or anywhere else.
+  </Step>
+  <Step title="Open Make It Rain settings">
+    Go to **Settings → Community Plugins → Make It Rain** and scroll to the **Template Engine** section.
+  </Step>
+  <Step title="Open Manage Templates">
+    Click **Manage templates…** to open the template management dialog.
+  </Step>
+  <Step title="Click Import from Clipboard">
+    Click **Import from Clipboard**. Make It Rain reads the JSON from your clipboard and validates it.
+  </Step>
+  <Step title="Resolve any name collision">
+    If a template with the same name already exists in your vault, the plugin surfaces an error rather than silently overwriting it. Rename your existing template first, then retry the import.
+  </Step>
+  <Step title="Apply the template">
+    The imported template appears in your named templates list. You can assign it to a content type in the Template Engine section, or reference it as a named partial using `{{#include "name"}}` in another template.
+  </Step>
+</Steps>
+
+<Warning>
+  Always review a template's content before applying it to a bulk import. A template from an untrusted source is just Markdown and Handlebars — it cannot execute code — but it could produce unexpected note formatting. Use the **Live Preview** in settings to see exactly what the template renders before committing to a full import.
+</Warning>
+
+## Using Community Templates
+
+The Make It Rain GitHub repository is the central place for community-shared templates:
+
+- **[GitHub Discussions](https://github.com/frostmute/make-it-rain/discussions)** — browse and share templates, ask questions, and show off workflows
+- **[GitHub Issues](https://github.com/frostmute/make-it-rain/issues)** — request new template features or report bugs in the template engine
+
+If you've built a template that handles a specific use case well — academic papers, recipe bookmarks, video lectures, book annotations — consider sharing it. Paste the exported JSON into a new Discussion thread with a short description of what it does.
+
+<Note>
+  The `version` field in the exported JSON exists for forward compatibility. Future versions of Make It Rain may introduce new template features; the version number allows the importer to handle older templates gracefully without breaking. Always include `"version": 1` when manually writing or editing template JSON for sharing.
+</Note>
+
+## Backing Up All Templates
+
+To back up your entire template library, export each template individually and store the JSON files alongside your vault (or in a dedicated `_templates/` folder inside it). Because each export is a self-contained JSON object, restoring is as simple as copying each file's contents and using **Import from Clipboard** in the destination vault.
+
+<Tip>
+  If you manage your vault in Git, committing your exported template JSON files gives you a full version history of every template change — useful if you want to roll back a template edit or track how your note style evolves over time.
+</Tip>

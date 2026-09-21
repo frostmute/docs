@@ -1,0 +1,208 @@
+---
+title: "Configure Note Templates for Each Content Type"
+sidebarTitle: "Note Templates"
+description: "Customize how Make It Rain formats imported notes using a Handlebars-like template engine with per-type overrides, partials, and live preview."
+---
+
+Make It Rain ships with seven built-in templates — one for each Raindrop content type (link, article, image, video, document, audio, and book). You can customize any of them from the Settings panel to produce exactly the note format you want. Templates use a Handlebars-like syntax with variables, conditionals, loops, partials, and block inheritance, giving you complete control over the output without writing any code.
+
+## Accessing Template Settings
+
+To reach the template editor:
+
+<Steps>
+  <Step title="Open Obsidian Settings">
+    Press `Cmd/Ctrl ,` or navigate to **Settings** from the sidebar.
+  </Step>
+  <Step title="Navigate to Make It Rain">
+    Under **Community Plugins**, click the gear icon next to **Make It Rain**.
+  </Step>
+  <Step title="Scroll to Template Engine">
+    Expand the **Template Engine** section. You will see a master enable toggle followed by a Default Template editor and a card for each content type.
+  </Step>
+  <Step title="Enable or customize a content type">
+    Toggle on any content-type card to activate a per-type override, then edit its template in the text area. Toggle it off to fall back to the Default Template for that type.
+  </Step>
+</Steps>
+
+## Default Base Template
+
+All content-type templates extend a shared **base** partial named `base`. The base template defines the YAML frontmatter and the overall note structure, with named block slots that per-type templates can override. Here is the full default base template as it ships:
+
+```handlebars
+---
+title: "{{title}}"
+source: {{link}}
+type: {{type}}
+created: {{created}}
+lastupdate: {{lastupdate}}
+id: {{id}}
+collectionId: {{collectionId}}
+collectionTitle: "{{collectionTitle}}"
+collectionPath: "{{collectionPath}}"
+{{#if collectionGroup}}collectionGroup: "{{collectionGroup}}"{{/if}}
+{{#if collectionParentId}}collectionParentId: {{collectionParentId}}{{/if}}
+tags:
+{{#each tags}}
+  - {{this}}
+{{/each}}
+{{#if cover}}
+{{bannerFieldName}}: {{cover}}
+{{/if}}
+---
+
+{{#block 'header'}}
+{{#if cover}}
+![{{title}}]({{cover}})
+{{/if}}
+
+# {{title}}
+{{/block}}
+
+{{#block 'content'}}
+{{#if excerpt}}
+## Description
+{{excerpt}}
+{{/if}}
+
+{{#if note}}
+## Notes
+{{note}}
+{{/if}}
+
+{{#if highlights}}
+## Highlights
+{{#each highlights}}
+- {{text}}
+{{#if note}}  *Note:* {{note}}{{/if}}
+{{/each}}
+{{/if}}
+{{/block}}
+
+{{#block 'scrapedContent'}}
+{{#if scrapedContent}}
+## Content
+{{scrapedContent}}
+{{/if}}
+{{/block}}
+
+{{#block 'localEmbed'}}
+{{#if localEmbed}}
+## Local Attachment
+{{localEmbed}}
+{{/if}}
+{{/block}}
+
+---
+{{#block 'details'}}
+## Details
+- **Type**: {{renderedType}}
+- **Domain**: {{domain}}
+- **Created**: {{formattedCreatedDate}}
+- **Updated**: {{formattedUpdatedDate}}
+- **Tags**: {{formattedTags}}
+{{/block}}
+{{#block 'footerLink'}}{{/block}}
+```
+
+The base template exposes the following overridable block slots: `header`, `content`, `scrapedContent`, `localEmbed`, `details`, and `footerLink`. Per-type templates can fill any of these blocks while inheriting everything else unchanged.
+
+## Per-Type Template Overrides
+
+Each content type can define its own template that extends `base` and replaces one or more block slots. This lets you add type-specific sections — like a scraping block for articles or a timestamp list for video — without duplicating the full frontmatter.
+
+Here is the built-in **article** template as an example:
+
+```handlebars
+{{#extends "base"}}
+{{#block 'content'}}
+{{#if excerpt}}
+## Summary
+{{excerpt}}
+{{/if}}
+
+{{#if note}}
+## Notes
+{{note}}
+{{/if}}
+
+{{#if highlights}}
+## Key Points
+{{#each highlights}}
+> {{text}}
+{{#if note}}  *Note:* {{note}}{{/if}}
+{{/each}}
+{{/if}}
+{{/block}}
+
+{{#block 'scrapedContent'}}
+{{#if scrapedContent}}
+## Full Content
+{{scrapedContent}}
+{{/if}}
+{{/block}}
+
+{{#block 'localEmbed'}}
+{{#if localEmbed}}
+## Local Copy
+{{localEmbed}}
+{{/if}}
+{{/block}}
+
+{{#block 'footerLink'}}
+[Read Article]({{link}})
+{{/block}}
+{{/extends}}
+```
+
+This template overrides four blocks (`content`, `scrapedContent`, `localEmbed`, `footerLink`) and inherits the YAML frontmatter and `header` block from `base` unchanged.
+
+The seven content types and their settings keys are:
+
+| Content Type | Settings Key | Raindrop type value |
+|---|---|---|
+| Link | `link` | `link` |
+| Article | `article` | `article` |
+| Image | `image` | `image` |
+| Video | `video` | `video` |
+| Document | `doc` | `document` |
+| Audio | `audio` | `audio` |
+| Book | `book` | `book` |
+
+## Named Templates (Partials)
+
+You can define reusable named partials in **Settings → Make It Rain → Template Engine → Reusable Partials**. Partials are named snippets you can pull into any template. Use them to avoid repeating the same markup across multiple content-type templates.
+
+To include a partial, use the `{{#include "name"}}` syntax:
+
+```handlebars
+{{#extends "base"}}
+{{#block 'content'}}
+{{#include "myHighlightsBlock"}}
+{{/block}}
+{{/extends}}
+```
+
+The built-in `base` partial is always available and is what the default content-type templates extend. You can edit the `base` partial directly in the **Reusable Partials** section to change the shared structure for all types at once.
+
+To create a new partial, click **+ Add new partial** at the bottom of the Reusable Partials section, give it a name, and write its content in the text area.
+
+## Live Preview
+
+Every template editor in the settings panel has a **Preview** button. Click it to open the **Template Preview modal**, which renders your template against a built-in sample Raindrop item. This lets you verify the output — including frontmatter, headings, and conditional sections — before running a real import.
+
+<Tip>
+  Use Preview after every edit, especially when working with conditionals or `{{#each}}` loops. The modal shows exactly what the final note will look like, including how missing fields (empty `excerpt`, no `highlights`) are handled.
+</Tip>
+
+The preview modal also lets you switch between sample items of different types so you can check how a template behaves across different Raindrop content types.
+
+## Disabling the Template Engine
+
+To stop using custom templates and revert to a simple built-in note format, toggle off **Enable template system** in Settings → Make It Rain → Template Engine. When disabled, Make It Rain writes notes using a minimal default structure. Your saved templates are preserved and restored if you re-enable the engine.
+
+This is useful when you want plain, unfussy notes without any configuration overhead.
+
+<Tip>
+  The `fileNameTemplate` setting also supports template placeholders: `{{title}}`, `{{id}}`, `{{collectionTitle}}`, and `{{date}}`. Customize it to include dates or IDs — for example `{{date}}-{{id}}-{{title}}` — to avoid filename collisions when the same title appears in multiple collections.
+</Tip>

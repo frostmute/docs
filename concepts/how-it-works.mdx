@@ -1,0 +1,62 @@
+---
+title: "How Make It Rain Syncs Your Raindrop Bookmarks"
+sidebarTitle: "How It Works"
+description: "Learn how Make It Rain connects to Raindrop.io, fetches bookmarks, converts them to Markdown notes, and writes them to your Obsidian vault."
+---
+
+Make It Rain is a one-way bridge between Raindrop.io and your Obsidian vault. This page explains what happens from the moment you trigger an import to the moment a note lands on disk — covering the API connection, note generation pipeline, rate limiting behavior, and how incremental imports keep your vault in sync without redundant writes.
+
+## The Import Pipeline
+
+Every import — whether triggered from the command palette, the ribbon icon, or a saved preset — follows the same five-step pipeline:
+
+1. **API authentication** — Make It Rain attaches your Raindrop.io Bearer token to every request. If the token is missing or invalid, the import halts immediately with a notice.
+2. **Collection and group resolution** — Before fetching any bookmarks, Make It Rain retrieves your full collection and group hierarchy. This lets you filter by collection name (e.g., `AI Papers`) or ID, and it populates the folder path for each note.
+3. **Bookmark fetching with filtering** — Raindrops are fetched in pages of 50. You can scope the fetch to specific collections, filter by tags (match all or any), or restrict to a single content type such as `article` or `image`.
+4. **Note generation using templates** — Each Raindrop item is passed through the template engine. If the template system is enabled, Make It Rain selects the appropriate per-content-type template (or the default template) and renders the note body and YAML frontmatter. If the template system is disabled, Make It Rain generates a standard frontmatter block and structured Markdown body automatically.
+5. **Folder creation and file writing** — Make It Rain creates any missing folders, then writes each note to your vault. Existing notes are either skipped or overwritten depending on your `fetchOnlyNew` and `updateExisting` settings.
+
+## YAML Frontmatter
+
+Every imported note includes a YAML frontmatter block that identifies the source bookmark and stores its metadata. This frontmatter is what Make It Rain uses to recognize previously imported notes during incremental imports and Safe Sync scans.
+
+A typical imported note opens with frontmatter like this:
+
+```yaml
+---
+raindrop_id: 123456789
+title: "The Illustrated Transformer"
+url: "https://jalammar.github.io/illustrated-transformer/"
+tags:
+  - machine-learning
+  - transformers
+  - nlp
+collection: AI Papers
+collectionPath: Tech Reading/AI Papers
+created: 2024-01-15T10:22:00.000Z
+updated: 2024-03-01T08:45:00.000Z
+cover: "https://jalammar.github.io/images/transformer/transformer.png"
+banner: "https://jalammar.github.io/images/transformer/transformer.png"
+---
+```
+
+The `raindrop_id` field is the stable numeric identifier assigned by Raindrop.io. Make It Rain uses it as the canonical key for deduplication and Safe Sync matching. All other fields are populated from the Raindrop item's metadata at import time.
+
+## Rate Limiting
+
+Make It Rain includes a built-in rate limiter that keeps API requests within Raindrop.io's limits of 60 requests per minute. The limiter runs automatically in the background — you do not need to configure it. During large imports, you may notice the progress notice pause briefly; this is the rate limiter holding back requests to avoid being throttled.
+
+The importer also uses `fetchWithRetry`, which transparently retries transient network failures with backoff, so a momentary connection hiccup will not abort your import.
+
+## Incremental Imports
+
+Two import options control how Make It Rain handles bookmarks you have already imported:
+
+- **Fetch only new (`fetchOnlyNew`)** — Make It Rain checks whether a note with the matching `raindrop_id` already exists in the target folder. If it does, the item is skipped and counted as "already exists" in the summary notice. Use this for routine top-ups where you only want net-new bookmarks added.
+- **Update existing (`updateExisting`)** — If a note already exists, Make It Rain overwrites it with the latest data from Raindrop.io. Use this when you have edited a bookmark's title, tags, or note in Raindrop and want those changes reflected in your vault.
+
+Both options can be set per import run in the Fetch modal, or saved as part of an import preset.
+
+<Info>
+  Make It Rain is strictly read-only with respect to Raindrop.io. It never creates, modifies, or deletes any data in your Raindrop account — all operations are GET requests against the Raindrop.io API.
+</Info>

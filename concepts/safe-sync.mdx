@@ -1,0 +1,69 @@
+---
+title: "Safe Sync: Keep Your Vault in Step with Raindrop"
+sidebarTitle: "Safe Sync"
+description: "Safe Sync scans your vault for notes whose Raindrop source was deleted or moved, then lets you archive, delete, or skip each orphaned note."
+---
+
+Safe Sync is Make It Rain's mechanism for cleaning up orphaned notes — notes in your vault that correspond to bookmarks you have since deleted or moved in Raindrop.io. Because Make It Rain is a one-way import tool, it does not automatically remove notes when you delete a bookmark; Safe Sync gives you a controlled, reviewable way to reconcile those differences on your own schedule.
+
+## The Problem Safe Sync Solves
+
+Every note Make It Rain imports includes a `raindrop_id` field in its YAML frontmatter. When you later delete or rename a bookmark in Raindrop.io, the corresponding note stays in your vault indefinitely. Over time, these orphaned notes accumulate as stale references — they occupy space, appear in searches, and may confuse graph views or Dataview queries.
+
+Safe Sync detects these orphans by checking each local `raindrop_id` against the live Raindrop.io API. It then presents you with a review interface so you can decide what to do with each one before anything is changed.
+
+## How It Works
+
+Safe Sync operates in two phases:
+
+1. **Vault scan** — Make It Rain reads every Markdown file in the target folder (or your full vault if no default folder is set) and collects the `raindrop_id` value from each note's frontmatter. Only notes that contain this field are considered candidates.
+2. **API verification** — The collected IDs are batch-checked against the Raindrop.io API using up to 10 concurrent requests. Each ID is categorized as:
+   - **Deleted** — the API confirmed that this Raindrop no longer exists in your account.
+   - **Unknown** — the API response was ambiguous (for example, due to a network timeout or an unexpected error). Make It Rain does not act on unknown items automatically.
+
+If all local notes have a matching live bookmark, Safe Sync reports a clean result and closes without opening any modal.
+
+## Running Safe Sync
+
+<Steps>
+  <Step title="Open the command palette">
+    Press `Ctrl+P` (Windows/Linux) or `Cmd+P` (macOS) to open Obsidian's command palette.
+  </Step>
+  <Step title="Run the Safe Sync command">
+    Type `Safe sync` and select **Safe sync: scan for deleted/renamed Raindrops**.
+
+    Make It Rain will scan your vault and check each found ID against the Raindrop.io API. A progress notice appears while the check runs.
+  </Step>
+  <Step title="Review detected orphans">
+    When the scan completes, a modal opens listing every orphaned note. Each entry shows the note's filename, its `raindrop_id`, and whether it was categorized as `deleted` or `unknown`. Use this list to confirm that the flagged notes are genuinely expendable before taking action.
+  </Step>
+  <Step title="Choose an action for each item">
+    For each note, select **Archive**, **Delete**, or **Skip**. Confirmed-deleted items default to the action configured in Settings. Unknown items always default to **Skip** — you must explicitly change them to act on them.
+
+    Click **Apply** to execute your choices.
+  </Step>
+</Steps>
+
+## Safe Sync Actions
+
+Three actions are available for each detected orphan:
+
+- **Prompt** (default setting) — Make It Rain opens the review modal before taking any action, letting you inspect and individually decide what happens to each note. No notes are moved or deleted until you confirm.
+- **Archive** — The note is moved to the configured trash folder (default: `.trash` at the vault root). The note is preserved but removed from its original location. This is reversible — you can retrieve the note from `.trash` if you change your mind.
+- **Delete** — The note is permanently removed from your vault. This action cannot be undone.
+
+The default action for confirmed-deleted items is controlled by the `safeSyncAction` setting in Settings → Safe Sync. The chosen action is pre-applied to all confirmed-deleted notes in the review modal, but you can override it per-note before applying.
+
+## Enabling Auto Safe Sync
+
+If you want Safe Sync to run automatically after every import, enable the `enableSafeSync` setting in Settings → Safe Sync. When this is on, Make It Rain triggers a Safe Sync scan at the end of each bulk import, scoped to the same vault path used for the import.
+
+Auto Safe Sync respects the same `safeSyncAction` setting. If `safeSyncAction` is set to **Prompt**, the review modal will appear after every import that finds orphans. If it is set to **Archive** or **Delete**, those actions are applied automatically without a review step.
+
+<Warning>
+  **Delete is permanent.** Notes removed with the Delete action bypass Obsidian's built-in trash and cannot be recovered from the vault. Before using Delete as your default action, run at least one Safe Sync in Prompt mode to review what would be affected, and consider switching to Archive so you have a recovery window.
+</Warning>
+
+<Note>
+  Items categorized as **unknown** are those where the API returned an ambiguous or failed response — for example, if your connection dropped mid-check or Raindrop.io returned an unexpected status code. Make It Rain always forces unknown items to **Skip** by default. Only confirmed-deleted items (where the API definitively returned "not found") are eligible for Archive or Delete actions.
+</Note>

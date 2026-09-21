@@ -1,0 +1,58 @@
+---
+title: "Make It Rain: Raindrop.io Bookmarks in Obsidian"
+sidebarTitle: "Introduction"
+description: "Make It Rain bridges Raindrop.io and Obsidian — importing bookmarks, highlights, and attachments as richly formatted Markdown notes with full metadata."
+---
+
+Make It Rain is an Obsidian community plugin that pulls your Raindrop.io bookmarks directly into your vault as structured Markdown notes. This page explains what the plugin does, the problems it solves, the features it offers, and what you need before you install it. If you're ready to jump straight to setup, head to the [Quickstart](/quickstart).
+
+## The problem it solves
+
+Raindrop.io is one of the most capable bookmark managers available — it handles links, articles, images, videos, PDFs, audio, and books, and lets you organize them into collections and groups, tag them, highlight passages, and leave personal notes. Obsidian is where your thinking happens, connecting ideas across Markdown files in a personal knowledge graph.
+
+The two tools don't talk to each other out of the box. If you want your saved articles in your vault, you copy and paste. If you want your highlights next to your own notes, you type them out. Make It Rain closes that gap: it reads your Raindrop account via the official API and writes your bookmarks into your vault as proper Markdown files — with YAML frontmatter, highlight sections, tag links, cover images, and optionally the full article text or downloaded file attachment.
+
+## Key features
+
+<CardGroup cols={2}>
+  <Card title="Bulk Import" icon="list-check">
+    Filter by collection, tag, content type, or any combination and import hundreds of bookmarks in one run. A modal lets you preview options before committing.
+  </Card>
+  <Card title="Template Engine" icon="code">
+    A Handlebars-like template system gives you complete control over the Markdown output for every content type. Use conditionals, loops, helpers, partials, and template inheritance.
+  </Card>
+  <Card title="Smart Folders" icon="folder-tree">
+    Make It Rain mirrors your Raindrop Groups and Collections as a nested folder hierarchy in your vault. Optionally generate index notes for each collection folder automatically.
+  </Card>
+  <Card title="Safe Sync" icon="shield-check">
+    After an import, Safe Sync scans your vault for notes whose source bookmark has been deleted or renamed in Raindrop. For each match you choose whether to ignore, archive, or permanently delete the note.
+  </Card>
+  <Card title="File Downloads" icon="download">
+    Native Raindrop file attachments — PDFs, EPUBs, audio, and video — are downloaded directly into your vault alongside their notes, with full S3 redirect support.
+  </Card>
+  <Card title="Import Presets" icon="bookmark">
+    Save any combination of collection, tag filter, folder target, and template settings as a named preset. Re-run it from the Command Palette with a single command.
+  </Card>
+</CardGroup>
+
+## Quick Import and Highlights Aggregation
+
+Beyond the main bulk import flow, Make It Rain includes two focused commands. **Quick Import** lets you paste a single Raindrop URL or ID and import that one bookmark instantly — useful when you save something and want it in your vault right away. **Aggregate Highlights by Tag** collects all highlighted passages that share a given tag from across your vault and consolidates them into a single summary note, making it easy to review and connect your annotations.
+
+## Tetromino: the Are.na companion
+
+If you also collect on [Are.na](https://www.are.na), frostmute's **Tetromino** plugin does the same job for Are.na channels — importing blocks, images, files, and metadata as Markdown notes with deterministic one-way sync. The two plugins share design principles and complementary documentation.
+
+<Card title="Tetromino Introduction" icon="grid-2" href="/tetromino/introduction">
+  Learn how Tetromino imports Are.na channels into Obsidian.
+</Card>
+
+## Requirements
+
+Before you install Make It Rain, make sure you have the following:
+
+- **Obsidian 1.13.0 or later** — the plugin will not load on older versions.
+- **A Raindrop.io account** — a free account is sufficient; a Pro account unlocks full-text search in Raindrop but is not required for Make It Rain to work.
+- **A Raindrop.io API test token** — generated at [app.raindrop.io/settings/integrations](https://app.raindrop.io/settings/integrations) (no cost, takes about one minute).
+
+Make It Rain works on both desktop and mobile Obsidian. No internet connection is required after initial import — your notes live entirely in your vault.

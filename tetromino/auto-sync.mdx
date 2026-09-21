@@ -1,0 +1,98 @@
+---
+title: "Automate Are.na Imports with Scheduled Sync"
+sidebarTitle: "Auto-Sync"
+description: "Keep your vault current by scheduling Tetromino to import Are.na channels on startup, at a timed interval, or both — no manual triggers required."
+---
+
+Tetromino can automatically import your Are.na channels on a schedule — on startup, at a fixed interval, or both — so your vault stays in sync without manual intervention. Both options are disabled by default and fully opt-in, consistent with Tetromino's philosophy of keeping imports explicit and user-controlled until you choose otherwise.
+
+## Sync on Startup
+
+Enable **Sync on startup** to trigger a full import across all enabled channels every time Obsidian launches.
+
+To enable it, go to **Settings → Community Plugins → Tetromino** and toggle **Sync on startup** (`syncOnStartup`) to on.
+
+With this option active, the moment Obsidian finishes loading your vault, Tetromino queues an import in the background. You do not need to open the command palette or click the ribbon icon — the import starts automatically.
+
+<Tip>
+  Sync on startup is ideal if you open Obsidian once a day or less. Your vault
+  is always current by the time you start working, with no extra steps.
+</Tip>
+
+## Scheduled Sync Interval
+
+Set a repeating sync interval to keep your vault continuously updated while Obsidian is open.
+
+Go to **Settings → Community Plugins → Tetromino** and set **Sync interval** (`syncInterval`) to the number of minutes between automatic imports.
+
+Common values:
+
+| Minutes | Frequency |
+|---|---|
+| `15` | Every 15 minutes |
+| `60` | Hourly |
+| `360` | Every 6 hours |
+| `1440` | Daily |
+
+Set the value to `0` to disable interval sync entirely.
+
+<Warning>
+  Very short intervals — under 5 minutes — may hit Are.na API rate limits,
+  especially for vaults with many channels or large block counts. Tetromino
+  retries rate-limited requests with backoff, but excessive polling will slow
+  down imports and may temporarily exhaust your API quota. Use an interval of
+  15 minutes or longer for reliable background sync.
+</Warning>
+
+## Notifications
+
+When `notifyOnSync` is enabled (the default), Tetromino displays progress toast notifications during each sync. The notifications show which channel is currently being processed and report a summary — blocks created, updated, and unchanged — when the import finishes.
+
+If you find these notifications distracting during background syncs, disable them by going to **Settings → Community Plugins → Tetromino** and toggling **Notify on sync** off. The import still runs silently; only the notifications are suppressed.
+
+## Import History
+
+Every successful sync — whether triggered automatically or manually — is recorded in your vault at:
+
+```
+Are.na/import-history.md
+```
+
+This file is append-only, meaning Tetromino never deletes or rewrites previous entries. Each entry includes:
+
+- The timestamp of the sync run
+- The channels that were synced
+- A count of blocks created, updated, and left unchanged
+
+Review this file to audit your sync history, confirm that scheduled syncs fired as expected, or diagnose gaps in coverage.
+
+## Recommendations
+
+Choosing the right sync strategy depends on how you use Are.na and Obsidian together:
+
+<CardGroup cols={2}>
+  <Card title="Open Obsidian infrequently" icon="calendar">
+    Enable **Sync on startup**. Your vault refreshes at the start of each
+    session without requiring a fixed schedule.
+  </Card>
+  <Card title="Active research workflows" icon="arrows-rotate">
+    Set **Sync interval** to `60` minutes. New blocks you save to Are.na
+    during the day appear in your vault automatically within the hour.
+  </Card>
+  <Card title="Careful, intentional updates" icon="hand">
+    Leave both options off and use **Import all channels now** from the
+    command palette when you want to pull in changes deliberately.
+  </Card>
+  <Card title="First-time setup" icon="magnifying-glass">
+    Run **Preview import (dry-run)** before enabling any automatic sync.
+    Confirm the output looks correct before giving Tetromino permission to
+    write continuously.
+  </Card>
+</CardGroup>
+
+<Note>
+  The sync interval timer only runs while Obsidian is open. If Obsidian is
+  closed, no automatic imports occur regardless of your interval setting.
+  Combine startup sync with an interval if you want coverage across both
+  session starts and long working sessions.
+</Note>

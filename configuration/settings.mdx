@@ -1,0 +1,124 @@
+---
+title: "Make It Rain Settings Reference"
+sidebarTitle: "Settings"
+description: "Complete reference for every Make It Rain setting — authentication, import defaults, folder organization, Safe Sync, and the template engine."
+---
+
+Access the Make It Rain settings panel by opening Obsidian's **Settings**, navigating to **Community Plugins**, and clicking the gear icon next to **Make It Rain**. Every change takes effect immediately — settings are saved automatically when you close the panel. This reference documents every available setting, its default value, and how it affects import behavior.
+
+## Authentication
+
+<ParamField path="apiToken" type="string" required>
+  Your Raindrop.io personal access token. Make It Rain uses this to authenticate all requests to the Raindrop.io API. Without a valid token, no imports can run.
+
+  Get your token from [Raindrop.io → Settings → Integrations](https://app.raindrop.io/settings/integrations) by creating a new app and copying the **Test token**. See the [Authentication guide](/guides/raindrop-authentication) for a full step-by-step walkthrough.
+
+  After entering your token, click **Verify token** in the settings panel to confirm it is valid before running your first import.
+</ParamField>
+
+## Import Defaults
+
+<ParamField path="defaultFolder" type="string" default="(vault root)">
+  The default vault folder path where imported notes are saved. Leave this empty to place notes directly in the vault root.
+
+  This value is used as the pre-filled destination in the bulk import modal and the quick import command. You can override it per-import from the modal.
+
+  **Example:** `Bookmarks` or `Imports/Raindrops`
+</ParamField>
+
+<ParamField path="fileNameTemplate" type="string" default="{{title}}">
+  A template string that controls the filename of each imported note. Supports the following placeholders:
+
+  | Placeholder | Value |
+  |---|---|
+  | `{{title}}` | The Raindrop bookmark title |
+  | `{{id}}` | The numeric Raindrop ID |
+  | `{{collectionTitle}}` | The name of the collection |
+  | `{{date}}` | Today's date (YYYY-MM-DD) |
+
+  **Example:** `{{date}}-{{title}}` produces filenames like `2024-06-01-My Bookmark.md`, which avoids collisions when titles repeat across collections.
+</ParamField>
+
+<ParamField path="showRibbonIcon" type="boolean" default="true">
+  Show the cloud-download icon in the Obsidian left sidebar. Clicking it opens the bulk import modal directly. Disable this if you prefer to trigger imports exclusively from the command palette.
+</ParamField>
+
+<ParamField path="bannerFieldName" type="string" default="banner">
+  The YAML frontmatter field name used to store the bookmark's cover image URL. The default value `banner` is compatible with the popular [Obsidian Banners](https://github.com/noatpad/obsidian-banners) plugin.
+
+  Change this if your Banners plugin is configured to read from a different field name (for example, `image` or `cover`).
+</ParamField>
+
+## Folder Organization
+
+<ParamField path="includeGroupInFolderPath" type="boolean" default="true">
+  Mirror Raindrop's **Group → Collection** hierarchy in your vault folder structure. When enabled, an imported bookmark from the collection `Reading List` inside the group `Research` is placed at `Research/Reading List/Note.md`.
+
+  Disable this to use only the collection name as the folder, dropping the group level entirely (`Reading List/Note.md`). This matches the pre-v1.10 behavior.
+
+  <Note>
+    This setting only affects future imports. Existing notes are not moved when you change it. The `collectionGroup` template variable and frontmatter metadata remain available regardless of this setting.
+  </Note>
+</ParamField>
+
+<ParamField path="createFolderNotes" type="boolean" default="false">
+  Automatically generate an index Markdown note inside each collection folder. The index note shares the folder's name and can serve as a table of contents or overview for that collection.
+
+  This works well alongside the [Folder Notes](https://github.com/LostPaul/obsidian-folder-notes) community plugin, which can display folder-level notes automatically.
+</ParamField>
+
+## Content
+
+<ParamField path="archiveScraping" type="boolean" default="false">
+  Fetch the full article text from Raindrop.io's permanent web archive for **article**-type bookmarks and inject it into the note body. When enabled, the scraped text is available in your template as `{{scrapedContent}}`.
+
+  <Note>
+    Archive scraping requires a **Raindrop.io Pro** subscription. Bookmarks without a cached archive entry are unaffected.
+  </Note>
+</ParamField>
+
+<ParamField path="downloadFiles" type="boolean" default="false">
+  Download file attachments — PDFs, EPUBs, audio files, and video files — directly into your vault alongside the imported note. The downloaded file path is exposed as `{{localFile}}` in templates, and `{{localEmbed}}` provides the Obsidian embed syntax (e.g., `![[My Document.pdf]]`).
+
+  See [File Downloads](/configuration/file-downloads) for storage details, supported file types, and template usage examples.
+</ParamField>
+
+## Safe Sync
+
+<ParamField path="enableSafeSync" type="boolean" default="false">
+  Automatically run a Safe Sync scan after each import. Safe Sync checks your vault for notes whose corresponding Raindrop bookmark has been deleted or renamed since the last import, then takes the action specified by `safeSyncAction`.
+
+  You can also trigger Safe Sync manually at any time from the command palette using **Safe Sync: scan for deleted/renamed Raindrops**.
+</ParamField>
+
+<ParamField path="safeSyncAction" type="Prompt | Archive | Delete" default="Prompt">
+  The default action to take when Safe Sync detects a local note whose remote Raindrop no longer exists.
+
+  | Value | Behavior |
+  |---|---|
+  | `Prompt` | Opens a review modal listing each affected note so you can decide individually |
+  | `Archive` | Silently moves affected notes to the folder defined by `trashFolderLocation` |
+  | `Delete` | Permanently removes affected notes from your vault |
+
+  <Warning>
+    The `Delete` action is irreversible. Use `Prompt` or `Archive` unless you are certain you want notes removed automatically without review.
+  </Warning>
+</ParamField>
+
+<ParamField path="trashFolderLocation" type="string" default=".trash">
+  The vault folder where notes are moved when `safeSyncAction` is set to `Archive`. The folder is created automatically if it does not exist.
+
+  **Example:** `.trash` (hidden folder, Obsidian default) or `Archive/Deleted`
+</ParamField>
+
+## Template Engine
+
+<ParamField path="isTemplateSystemEnabled" type="boolean" default="true">
+  Enable the Handlebars-like template engine. When enabled, Make It Rain renders each note using the templates you configure in the **Template Engine** section of settings. When disabled, a simple built-in format is used instead — useful for a quick plain-notes setup without any template configuration.
+
+  See [Note Templates](/configuration/templates) for the full template authoring guide.
+</ParamField>
+
+<Note>
+  Make It Rain saves all settings automatically. You do not need to click a Save button — changes take effect as soon as you close the settings panel or move focus away from a field.
+</Note>

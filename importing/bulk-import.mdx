@@ -1,0 +1,111 @@
+---
+title: "Bulk Import Bookmarks from Raindrop.io"
+sidebarTitle: "Bulk Import"
+description: "Filter Raindrop.io bookmarks by collection, tag, and content type, then import them all into your Obsidian vault in a single batch operation."
+---
+
+The Bulk Import modal is the primary way to bring large numbers of bookmarks into your vault at once. It gives you precise control over which raindrops to import — by collection, tag, content type, and more — and lets you decide whether to create new notes, update existing ones, or both. This page covers every option in the modal and shows what a finished note looks like.
+
+## Opening the Import Modal
+
+You can open the Bulk Import modal two ways:
+
+- **Command palette:** Press `Ctrl+P` (Windows/Linux) or `Cmd+P` (macOS), then search for and run **Fetch raindrops (filtered)**.
+- **Ribbon icon:** Click the cloud-download icon in the left sidebar. If you do not see the icon, enable **Show ribbon icon** in the Make It Rain settings.
+
+## Filter Options
+
+The modal is divided into three sections: **Source**, **Filters**, and **Note Formatting**. Each option below controls what gets imported and how.
+
+### Source
+
+<ParamField body="Collections" type="string">
+  Enter collection names or IDs separated by commas, or click items in the interactive collection list to add them. Leave blank to import from all collections in your Raindrop.io account. Nested paths are displayed in `Parent > Child` format so you can identify collections with duplicate names.
+</ParamField>
+
+<ParamField body="Include Subcollections" type="boolean" default="true">
+  When enabled, Make It Rain also imports bookmarks from every child collection nested beneath the collections you specify. Disable this to import only from the exact collections listed.
+</ParamField>
+
+<ParamField body="Vault Path" type="string">
+  The folder inside your vault where imported notes are saved. Overrides the **Default Folder** set in plugin settings for this run only. Leave blank to use the global default.
+</ParamField>
+
+### Filters
+
+<ParamField body="Filter by Tags" type="string">
+  Enter one or more Raindrop.io tag names separated by commas. Only bookmarks carrying those tags are imported. Leave blank to skip tag filtering entirely.
+</ParamField>
+
+<ParamField body="Tag Match Mode" type="string" default="all">
+  Controls how multiple tags are evaluated when you supply more than one tag in the **Filter by Tags** field.
+
+  - **Must have ALL tags (AND)** — only imports bookmarks that carry every tag you listed.
+  - **Must have ANY tag (OR)** — imports bookmarks that carry at least one of the tags you listed.
+
+  This field only appears after you enter at least one tag.
+</ParamField>
+
+<ParamField body="Content Type" type="string" default="all">
+  Restrict the import to a specific type of bookmark. Choose from **All Types**, or pick one of: `link`, `article`, `image`, `video`, `document`, `audio`, `book`. Matches the `type` field Raindrop.io assigns to each bookmark.
+</ParamField>
+
+<ParamField body="Fetch Only New" type="boolean" default="true">
+  When enabled, Make It Rain skips any bookmark whose corresponding note already exists in the vault. Matching is based on the `raindrop_id` in frontmatter. Disable this if you want to re-import and overwrite existing notes.
+</ParamField>
+
+<ParamField body="Update Existing Notes" type="boolean" default="false">
+  When enabled, Make It Rain overwrites the frontmatter of notes that already exist in your vault, bringing metadata like tags, updated date, and cover image up to date. Enable this alongside **Fetch Only New** disabled to refresh existing notes without creating duplicates.
+</ParamField>
+
+### Note Formatting
+
+<ParamField body="Append Vault Tags" type="string">
+  Add one or more Obsidian tags to every note created during this run, regardless of what tags the bookmark carries in Raindrop.io. Enter tags separated by commas and prefix each with `#` (e.g. `#imported, #reading`). Spaces are converted to underscores automatically.
+</ParamField>
+
+<ParamField body="Use Raindrop Title for Filename" type="boolean" default="true">
+  When enabled, the note filename is derived from the bookmark's title in Raindrop.io (via your **Filename Template** setting). Disable this to use the numeric Raindrop ID as the filename instead — useful when titles contain characters that are problematic in file systems.
+</ParamField>
+
+<ParamField body="Disable Custom Templates" type="boolean" default="false">
+  A one-run override: when enabled, Make It Rain ignores your saved custom templates and falls back to the default note structure for this import only. Useful for debugging template issues without permanently disabling the template system. Only visible when the template system is enabled in settings.
+</ParamField>
+
+## Running the Import
+
+Once your filters are set, click **Start Import**. Make It Rain fetches matching bookmarks from the Raindrop.io API and writes one Markdown note per bookmark into your vault. Progress is shown in the Obsidian status bar at the bottom of the window. If an individual bookmark fails to import (for example, due to a network error), that error is logged and the batch continues — a failure on one item does not stop the rest.
+
+A completed import note looks like this:
+
+```markdown
+---
+raindrop_id: 12345678
+title: "Getting Started with Obsidian"
+link: https://obsidian.md/getting-started
+excerpt: A comprehensive guide to building your personal knowledge base.
+cover: https://obsidian.md/images/og.png
+banner: https://obsidian.md/images/og.png
+tags:
+  - obsidian
+  - productivity
+type: article
+collection: Productivity
+created: 2024-03-15
+updated: 2024-06-01
+domain: obsidian.md
+---
+
+## Highlights
+
+- Knowledge management doesn't have to be complicated. — *Start simple*
+- Your notes are plain Markdown files — no proprietary format lock-in.
+
+## Notes
+
+Revisit section 3 on graph view.
+```
+
+<Tip>
+  If you run the same filtered import regularly — for example, all articles from your "Research" collection — save your filter configuration as a **preset** so you can re-run it in one click from the command palette. See [Presets](/importing/presets) for how to create and manage them.
+</Tip>

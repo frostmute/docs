@@ -1,0 +1,92 @@
+---
+title: "How Tetromino Converts Are.na Blocks to Notes"
+sidebarTitle: "Blocks"
+description: "Understand how Tetromino maps each Are.na block type to a Markdown note, including frontmatter fields, filename formats, and channel index notes."
+---
+
+In Are.na, a block is the fundamental unit of content. A block can be a piece of text, a link to a webpage, an image, a file attachment, an embedded media player, or a reference to another channel. When you import a channel, Tetromino converts every block into a self-contained Markdown note inside the mapped vault folder. This page explains how each block type is handled, what frontmatter is generated, how filenames are chosen, and how the channel index note ties everything together.
+
+## Block Types
+
+Tetromino recognizes six block types from the Are.na API. Each is converted differently:
+
+<Accordion title="Text">
+  A plain text or Markdown block. The block's body content becomes the note body. If the block has a title, it appears as a top-level heading (`# Title`) at the start of the note. If there is no title, Tetromino uses the block ID as the note filename and omits the heading.
+</Accordion>
+
+<Accordion title="Link">
+  A saved URL. The source URL is stored in the `source_url` frontmatter field and rendered as a Markdown link in the note body. The block title (or page title fetched by Are.na) becomes the note heading.
+
+  ```markdown
+  # Page Title
+
+  [Page Title](https://example.com/article)
+  ```
+</Accordion>
+
+<Accordion title="Image">
+  An image block. How the image appears in your note depends on the `imageHandling` setting — see [Attachments](/tetromino/attachments) for the full breakdown. The block title (or filename) becomes the note heading, and any block description is included below the image.
+</Accordion>
+
+<Accordion title="Attachment">
+  A file upload (PDF, ZIP, document, etc.). The file is downloaded or linked based on your `attachmentHandling` setting. The rendered note includes the file as a link or embed and preserves the block title and description.
+</Accordion>
+
+<Accordion title="Media / Embed">
+  An embeddable media block (videos, audio, etc.) sourced via oEmbed. The embed URL is preserved in the note, and the source provider and description are included where available.
+</Accordion>
+
+<Accordion title="Channel">
+  A reference to another Are.na channel embedded inside the current channel. Tetromino renders it as a Markdown link pointing to the referenced channel's index note in your vault (if that channel has also been imported). A best-effort preview image can be included by enabling **Channel block preview image** in settings.
+</Accordion>
+
+## Note Frontmatter
+
+When `frontmatterEnabled` is `true` (the default), every block note includes YAML frontmatter with Are.na metadata:
+
+```yaml
+---
+title: "Block Title"
+arena_id: 12345678
+arena_type: Link
+arena_url: "https://www.are.na/block/12345678"
+source_url: "https://example.com/article"
+description: "Block description"
+---
+```
+
+You can extend this frontmatter with optional fields:
+
+| Setting | What it adds |
+|---|---|
+| `bannerFieldEnabled` | A `banner` field (or custom key) with the block's best-effort image URL |
+| `includeBlockDescriptionFrontmatter` | An `arena_description` field with the block description |
+
+To disable frontmatter entirely, set `frontmatterEnabled` to `false` in settings.
+
+## Block Naming
+
+The `blockNaming` setting controls how Tetromino names the Markdown file for each block:
+
+| Value | Filename format | Example |
+|---|---|---|
+| `title` (default) | The block's title | `How the Internet Happened.md` |
+| `id` | The Are.na block ID | `98765432.md` |
+| `title-id` | Title and ID combined | `How the Internet Happened-98765432.md` |
+
+Use `id` or `title-id` if you have blocks with identical titles in the same channel, or if you want filenames that remain stable even if block titles change on Are.na.
+
+<Tip>
+  You can skip importing specific block types entirely using the **Exclude block classes** setting. For example, add `Image` to the exclusion list to skip all image blocks across all channels. This is useful if you prefer to keep images as remote links rather than imported notes.
+</Tip>
+
+## Channel Index Notes
+
+Each imported channel gets an index note that lists all its blocks with wiki-style links. The index filename is controlled by the `channelIndexNoteStyle` setting:
+
+| Value | Filename | Notes |
+|---|---|---|
+| `index` (default) | `index.md` | Compatible with Folder Notes plugins that expect an `index.md` |
+| `folder-name` | `<channel-slug>.md` | The index note matches the folder name, e.g. `my-research-channel.md` |
+
+The index note includes the channel title, description, block count, and a linked list of all block notes. It is regenerated on every import to stay current.

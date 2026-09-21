@@ -1,0 +1,65 @@
+---
+title: "Get Started with Tetromino in Minutes"
+sidebarTitle: "Quickstart"
+description: "Install Tetromino, connect your Are.na account with a personal access token, and run your first Are.na channel import into Obsidian in minutes."
+---
+
+This guide walks you through everything you need to run your first Are.na import: installing the plugin, authenticating with the Are.na API, mapping your channels, and triggering the import. By the end, your Are.na channels will appear as organized Markdown notes inside your vault.
+
+<Steps>
+
+  <Step title="Install Tetromino from Community Plugins">
+    Open Obsidian and go to **Settings → Community Plugins**. If restricted mode is on, click **Turn on community plugins**. Search for **Tetromino**, click **Install**, then click **Enable**.
+
+    You can also install manually by downloading `main.js`, `manifest.json`, and `styles.css` from the [latest GitHub release](https://github.com/frostmute/Tetromino/releases/latest) and placing them in `<vault>/.obsidian/plugins/tetromino/`.
+  </Step>
+
+  <Step title="Get your Are.na personal access token">
+    Tetromino uses the Are.na REST API v3 with Bearer token authentication.
+
+    1. Go to [are.na/developers/personal-access-tokens](https://www.are.na/developers/personal-access-tokens).
+    2. Sign in to your Are.na account if prompted.
+    3. Create a new personal access token and copy it — you won't be able to see it again after closing the page.
+
+    Keep this token private. Tetromino stores it locally in Obsidian's plugin data and never transmits it outside the Are.na API.
+  </Step>
+
+  <Step title="Add your token in Tetromino settings">
+    In Obsidian, go to **Settings → Community Plugins → Tetromino**. Paste your personal access token into the **API Token** field. Click **Verify** to confirm the token is valid before proceeding.
+  </Step>
+
+  <Step title="Import your channel mappings">
+    Scroll down to the **Channel management** section in Tetromino settings and click **Import my channels**. Tetromino fetches all channels from your Are.na account and creates a mapping for each one, defaulting to `Are.na/<channel-slug>/` as the vault folder. Each new mapping is enabled automatically.
+
+    You can also add mappings manually by clicking **+ Add mapping** and entering a channel slug — the part of the Are.na URL after `/channel/`.
+  </Step>
+
+  <Step title="Run your first import">
+    Open the Obsidian command palette with `Ctrl/Cmd+P` and run **Import all channels now**. Tetromino fetches all blocks from every enabled channel, converts them to Markdown notes, and writes them to your vault. A sync summary modal appears when the import finishes.
+  </Step>
+
+  <Step title="Explore your vault">
+    After the import completes, open the file explorer. Your channels appear under `Are.na/`:
+
+    ```
+    Vault/
+    └── Are.na/
+        ├── overview.md
+        ├── my-research-channel/
+        │   ├── index.md
+        │   ├── Block Title.md
+        │   └── Another Block.md
+        └── import-history.md
+    ```
+
+    - **`overview.md`** — a master note linking to every imported channel
+    - **`<channel-slug>/index.md`** — the channel index note listing all its blocks
+    - **`<channel-slug>/<Block Title>.md`** — one note per Are.na block
+    - **`import-history.md`** — an append-only log of every completed import
+  </Step>
+
+</Steps>
+
+<Tip>
+  Before your first real import, run **Preview import (dry-run)** from the command palette. Tetromino fetches all channel data and shows you exactly which files would be created or updated — without writing a single file to your vault. It's the safest way to verify your mappings are correct before committing.
+</Tip>

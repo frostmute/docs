@@ -1,0 +1,92 @@
+---
+title: "Manage Are.na Channel Mappings in Tetromino"
+sidebarTitle: "Channels"
+description: "Learn how to create, configure, enable, and back up Are.na channel mappings that control where Tetromino writes notes in your vault."
+---
+
+Tetromino works by mapping Are.na channels to vault folders. Each mapping tells the plugin which Are.na channel to import and exactly where to write the resulting notes. This page covers how to create and manage those mappings — from the fastest automated setup to fine-grained customization of individual channels.
+
+## Importing Your Channels
+
+The fastest way to get started is to let Tetromino create all your mappings automatically:
+
+<Steps>
+  <Step title="Open Tetromino settings">
+    Go to **Settings → Community Plugins → Tetromino** in Obsidian.
+  </Step>
+  <Step title="Click Import my channels">
+    Scroll to the **Channel management** section and click **Import my channels**. Tetromino connects to the Are.na API using your saved token and fetches every channel in your account.
+  </Step>
+  <Step title="Review the created mappings">
+    Tetromino creates one mapping per channel. Each new mapping defaults to `Are.na/<channel-slug>/` as the vault folder and is enabled automatically (controlled by the **Auto-enable imported channels** toggle).
+  </Step>
+  <Step title="Run your first import">
+    Open the command palette (`Ctrl/Cmd+P`) and run **Import all channels now**. Only enabled mappings are processed.
+  </Step>
+</Steps>
+
+## Channel Mapping Structure
+
+Each mapping links one Are.na channel to one vault folder. A mapping stores:
+
+| Field | Description |
+|---|---|
+| **Channel slug** | The Are.na identifier — the part of the URL after `/channel/`. Required. |
+| **Channel ID** | The internal Are.na numeric ID. Populated automatically on first import. |
+| **Channel title** | The human-readable channel name. Populated automatically on first import. |
+| **Local folder** | The vault folder path where block notes are written. Defaults to `Are.na/<channel-slug>`. |
+| **Enabled** | Whether this channel is included when you run **Import all channels now**. |
+| **Attachment storage override** | Optional per-channel override for attachment storage location. |
+| **Last synced at** | ISO timestamp of the last successful import for this mapping. |
+
+## Enabling and Disabling Channels
+
+Only enabled channels are processed when you run **Import all channels now** or **Preview import (dry-run)**. You can toggle individual channels on or off in **Settings → Tetromino → Channel mappings** using the toggle next to each mapping.
+
+Disabling a channel does not delete any notes already written to your vault — it simply excludes that channel from future imports. To import a disabled channel on demand, use the **Import current channel** command while a note inside that channel's folder is open.
+
+## Custom Target Folders
+
+By default, Tetromino writes a channel's notes to `Are.na/<channel-slug>/`. You can change this for any mapping by editing the **Local folder** field in **Settings → Tetromino → Channel mappings**.
+
+For example, if you have a channel called `reading-list`, you could map it to:
+
+```
+Books/Are.na Reading List/
+```
+
+After changing the folder, run the import again. New and updated notes will be written to the new location. Use the **Attachment migration** tools if you also need to move any previously downloaded files.
+
+## Backing Up Channel Mappings
+
+Tetromino can save a snapshot of all your channel mappings as a timestamped JSON file in your vault:
+
+<Steps>
+  <Step title="Open Tetromino settings">
+    Go to **Settings → Community Plugins → Tetromino**.
+  </Step>
+  <Step title="Click Backup channel mappings">
+    Under **Channel management**, click **Backup channel mappings**. Tetromino creates a file at `Are.na/channel-mapping-backups/mappings-<timestamp>.json`.
+  </Step>
+  <Step title="Restore when needed">
+    To restore from the most recent backup, click **Restore latest backup**. To pick a specific historical backup, click **Restore from file...** and select the file from your vault.
+  </Step>
+</Steps>
+
+The backup file includes the creation timestamp, a count of mappings, and the full mapping array:
+
+```json
+{
+  "createdAt": "2026-06-26T10:00:00.000Z",
+  "mappingCount": 4,
+  "channelMappings": [ ]
+}
+```
+
+## The Overview Note
+
+After every import (and after every dry-run preview), Tetromino updates `Are.na/overview.md`. This master note lists all mapped channels and includes links to each channel's index note, making it a useful home base for navigating your Are.na content inside Obsidian.
+
+<Warning>
+  **Reset channel mappings** deletes all mappings permanently — including ones that are disabled. This action cannot be undone from within the plugin. Always click **Backup channel mappings** before using the reset option.
+</Warning>

@@ -1,0 +1,101 @@
+---
+title: "Set Up Make It Rain in Your Obsidian Vault"
+sidebarTitle: "Obsidian Setup"
+description: "Prepare your Obsidian vault for Make It Rain with recommended folder structures, key plugin settings, and compatible plugins that extend its capabilities."
+---
+
+Make It Rain works best when your vault is organized to receive and surface imported bookmarks efficiently. This guide covers practical vault layout recommendations, the key plugin settings to configure first, and a selection of Obsidian plugins that pair naturally with Make It Rain's output — including how to use Dataview to build live bookmark dashboards from your imported frontmatter.
+
+## Recommended Vault Structure
+
+A dedicated top-level folder keeps your imported bookmarks separate from your own writing and makes Dataview queries straightforward. Here is a starter layout that mirrors a typical Raindrop.io organization:
+
+```
+Vault/
+├── Bookmarks/            ← set this as your defaultFolder
+│   ├── Articles/
+│   ├── Videos/
+│   └── Reading List/
+└── Notes/
+```
+
+With `includeGroupInFolderPath` enabled (the default), Make It Rain automatically creates the sub-folders inside `Bookmarks/` to mirror your Raindrop Groups and Collections — you don't need to create them manually. The folders above serve as a useful starting sketch; the actual sub-folder names are driven by your Raindrop structure at import time.
+
+## Setting a Default Folder
+
+The **Default Folder** setting tells Make It Rain where to write new notes when no per-import path is specified.
+
+<Steps>
+  <Step title="Open Obsidian Settings">
+    Press `Cmd/Ctrl + ,` or click the gear icon in the bottom-left sidebar.
+  </Step>
+  <Step title="Navigate to Make It Rain">
+    Scroll to **Community Plugins** in the left panel and click **Make It Rain**.
+  </Step>
+  <Step title="Set the Default Folder">
+    Find the **Default Folder** field and type the vault-relative path, for example `Bookmarks`. You do not need a leading slash.
+  </Step>
+  <Step title="Confirm the folder exists">
+    Create the folder in your vault if it doesn't already exist. Make It Rain will create sub-folders automatically, but the root folder must be present first.
+  </Step>
+</Steps>
+
+<Note>
+  You can override the default folder on a per-import basis inside the bulk import modal. The `defaultFolder` setting acts as a fallback whenever no override is provided.
+</Note>
+
+## Enabling the Ribbon Icon
+
+Make It Rain adds a cloud-download icon to the Obsidian left sidebar ribbon. Clicking it opens the bulk import modal directly — no command palette needed. This icon is enabled by default via the `showRibbonIcon` setting.
+
+If the icon is not visible, re-enable it:
+
+<Steps>
+  <Step title="Open Make It Rain settings">
+    Go to **Settings** → **Community Plugins** → **Make It Rain**.
+  </Step>
+  <Step title="Toggle the ribbon icon on">
+    Find **Show Ribbon Icon** and enable the toggle. The cloud-download icon appears immediately in the left sidebar — no restart required.
+  </Step>
+</Steps>
+
+<Tip>
+  On mobile, the ribbon is accessible by swiping to reveal the left sidebar. The ribbon icon opens the import modal just as it does on desktop.
+</Tip>
+
+## Works Well With
+
+Make It Rain produces richly structured Markdown notes with YAML frontmatter, banner images, highlights, and tags. Several Obsidian community plugins are designed to consume exactly this kind of output.
+
+<CardGroup cols={3}>
+  <Card title="Obsidian Banners" icon="image">
+    Displays cover images as full-width page banners. Make It Rain automatically writes the cover image URL to the `banner` frontmatter field, which Obsidian Banners reads natively — no extra configuration needed.
+  </Card>
+  <Card title="Dataview" icon="table">
+    Query your imported bookmarks by tag, collection, date, or any other frontmatter field. Use it to build dynamic reading lists, review dashboards, or highlight summaries across your entire vault.
+  </Card>
+  <Card title="Templater" icon="code">
+    Combine Templater with Make It Rain's own template engine for advanced note creation workflows. Use Templater for vault-wide note scaffolding and Make It Rain's templates for fine-grained control over how each bookmark type is rendered.
+  </Card>
+</CardGroup>
+
+<Tip>
+  Use Dataview to build a live "Recently Imported" table that updates automatically every time you run an import:
+
+  ```dataview
+  TABLE url, created, collectionTitle
+  FROM "Bookmarks"
+  SORT created DESC
+  LIMIT 20
+  ```
+
+  Paste this into any note inside your vault and Dataview renders it as a live table. Swap `"Bookmarks"` for whatever path you set as your `defaultFolder`.
+</Tip>
+
+## Mobile Use
+
+Make It Rain works on Obsidian for iOS and Android. All commands — bulk import, quick import, Safe Sync, and highlight aggregation — are available through the command palette on mobile. Tap the magnifying glass or use the mobile toolbar to access the command palette, then search for "Make It Rain" to see the full list.
+
+<Note>
+  File downloads (PDFs, EPUBs, and other native Raindrop attachments) may be slower on mobile depending on your network connection and the size of the attachment. If a download times out, try re-importing on a stable Wi-Fi connection. Text-only imports complete quickly regardless of connection speed.
+</Note>

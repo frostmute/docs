@@ -1,0 +1,113 @@
+---
+title: "Troubleshooting Make It Rain Issues"
+sidebarTitle: "Troubleshooting"
+description: "Diagnose and fix the most common Make It Rain problems — from empty imports and auth errors to duplicate notes, failed downloads, and Safe Sync surprises."
+---
+
+Most Make It Rain issues fall into a few predictable categories: authentication problems, import filters that are too restrictive, template syntax errors, or settings mismatches after a configuration change. This guide covers the most frequent problems and the fastest path to resolving each one. Work through the relevant section below, and if your issue isn't listed, open a GitHub issue using the link at the bottom of this page.
+
+<AccordionGroup>
+
+<Accordion title="No bookmarks are imported / import completes with 0 items">
+  When an import finishes instantly with zero results, check the following in order:
+
+  **API token** — Open **Settings → Make It Rain** and confirm the **API Token** field is not empty. Click **Verify Token** to test the connection live.
+
+  **Collection has items** — In the bulk import modal, confirm the selected collection actually contains bookmarks in your Raindrop.io account. Open Raindrop.io in your browser and verify.
+
+  **Tag filters are too restrictive** — If you've entered tags in the filter fields, check whether you're using AND logic (all tags must match) versus OR logic (any tag matches). A combination that returns zero results in Raindrop.io will return zero results here too.
+
+  **"Fetch Only New" is skipping everything** — If you've imported these bookmarks before, enabling "Fetch Only New" tells Make It Rain to skip notes that already exist in your vault. If every bookmark already has a corresponding note, the import count will be zero even though everything is working correctly. Disable this option to force a re-import of all items.
+</Accordion>
+
+<Accordion title="Authentication error / 401 Unauthorized">
+  A 401 error means the Raindrop.io API rejected your token. This happens when:
+
+  - The token has been revoked in Raindrop.io settings
+  - The token was regenerated and the old value is still in Make It Rain
+  - The wrong value was copied (App ID or App Secret instead of the Test token)
+
+  **Fix:** Go to [app.raindrop.io/settings/integrations](https://app.raindrop.io/settings/integrations), open your app, and copy the **Test token** (a long JWT string beginning with `eyJ`). Open **Settings → Make It Rain**, paste the new token into the **API Token** field, and click **Verify Token** to confirm it works.
+</Accordion>
+
+<Accordion title="Notes are missing highlights">
+  If your imported notes don't contain any highlight content, check both the source data and your template:
+
+  **The bookmark has no highlights in Raindrop.io** — Highlights are only imported if they exist on the bookmark. Open the bookmark in Raindrop.io and confirm highlights are present.
+
+  **The template doesn't include the highlights block** — Check that your active template for the relevant content type includes an `{{#each highlights}}` loop. Without it, highlight data is fetched but never rendered. Open **Settings → Make It Rain → Template Engine**, select the content type, and verify the template contains something like:
+
+  ```handlebars
+  {{#each highlights}}
+  > {{this.text}}
+  {{#if this.note}}_{{this.note}}_{{/if}}
+  {{/each}}
+  ```
+
+  **You're using the default template** — The built-in default templates include highlights. If you've customized your template and removed the highlights block, use **Reset to default** in the template editor to restore it, then re-add your customizations.
+</Accordion>
+
+<Accordion title="Duplicate notes are being created">
+  Make It Rain identifies existing notes by the `raindrop_id` field in YAML frontmatter — not by filename. Duplicate notes appear when:
+
+  - Existing notes are missing the `raindrop_id` frontmatter field (imported before version 1.10.0, or imported with a template that doesn't write frontmatter)
+  - The `fileNameTemplate` was changed after an initial import, creating a new filename that doesn't match the existing note
+
+  **Fix:** Check whether existing notes in your vault have `raindrop_id` in their frontmatter. Open one of the duplicate notes and look at the raw Markdown. If `raindrop_id` is absent, the plugin cannot match against it and will create a new note.
+
+  For notes missing `raindrop_id`, you can either manually add the field to existing notes, or accept the duplicates and delete the older versions. Going forward, ensure your template writes `raindrop_id` to frontmatter — the default template does this automatically.
+</Accordion>
+
+<Accordion title="File downloads are failing">
+  Native file downloads (PDFs, EPUBs, audio, video) can fail for several reasons:
+
+  **Expired or private attachment URL** — Some Raindrop.io attachment URLs use time-limited S3 signed links. If the URL has expired since the bookmark was saved, the download will fail. Try re-importing the bookmark to fetch a fresh URL.
+
+  **Attachment is only accessible in the Raindrop.io app** — Certain file types are served through Raindrop's authenticated CDN. If the download fails consistently, open the bookmark in the Raindrop.io app directly to confirm the file is still accessible.
+
+  **Network issue** — Check your internet connection. On mobile, try switching from cellular to Wi-Fi or vice versa.
+
+  **`downloadFiles` is disabled** — Confirm that **Download Files** is enabled in **Settings → Make It Rain**. Without it, file references appear in notes as links rather than downloaded attachments.
+
+  If a download fails, the note is still created with a link to the original file URL — you won't lose the reference.
+</Accordion>
+
+<Accordion title="Folder structure doesn't match Raindrop">
+  If imported notes are landing in the wrong folder or the folder hierarchy looks incorrect:
+
+  **Check `includeGroupInFolderPath`** — If this is disabled, Group-level folders are skipped and Collections become top-level folders under `defaultFolder`. Enable it in **Settings → Make It Rain → Include Group in Folder Path** to restore full hierarchy mirroring.
+
+  **Check `defaultFolder`** — Open **Settings → Make It Rain** and confirm the **Default Folder** field contains the correct vault-relative path (e.g., `Bookmarks`, not `/Bookmarks/` or an absolute path).
+
+  **Per-import override** — If you previously set a one-off save location in the bulk import modal, that path was used for that import only. It doesn't affect future imports unless you set it again.
+</Accordion>
+
+<Accordion title="Template syntax errors / notes render incorrectly">
+  Template errors produce malformed notes or plain-text output with visible Handlebars syntax.
+
+  **Use the Live Preview** — Open **Settings → Make It Rain → Template Engine**, select the affected content type, and check the preview panel on the right. The preview renders in real time as you edit and highlights syntax errors inline.
+
+  **Check for unclosed blocks** — Every `{{#if}}` must have a matching `{{/if}}`, and every `{{#each}}` must have a matching `{{/each}}`. Unclosed blocks are the most common source of template errors.
+
+  **Check for unclosed extends/block** — If you use template inheritance (`{{#extends "base"}}`), every `{{#block "name"}}` must close with `{{/block}}` and the extends block itself must close with `{{/extends}}`.
+
+  **Reset to default** — If you can't identify the error, click **Reset to default** in the template editor to restore the built-in template for that content type. Re-apply your customizations incrementally, previewing after each change.
+</Accordion>
+
+<Accordion title="Safe Sync is deleting notes I want to keep">
+  Safe Sync only marks a note for action when the Raindrop.io API returns an explicit `result: false` response for that bookmark's ID — meaning the bookmark definitively no longer exists. API errors, timeouts, and unexpected response shapes are placed in an ambiguous bucket and **always default to Ignore**, requiring manual review before any action is taken.
+
+  If Safe Sync is acting on notes you want to keep:
+
+  **Switch to Prompt mode** — Set `safeSyncAction` to `Prompt` in **Settings → Make It Rain → Safe Sync Action**. In Prompt mode, a per-item modal appears for every candidate, letting you choose Ignore, Archive, or Delete individually before anything is changed.
+
+  **Check that the bookmark still exists in Raindrop.io** — If the bookmark was genuinely deleted from Raindrop.io, Safe Sync's assessment is correct. You can still choose Ignore in Prompt mode to keep the local note regardless.
+
+  **Check the `raindrop_id` frontmatter** — Safe Sync only evaluates notes that carry a `raindrop_id` field in their frontmatter. If a note has an incorrect or stale ID, it may match a deleted bookmark that doesn't correspond to the note's content. Correct the frontmatter value or remove `raindrop_id` from notes you want Safe Sync to ignore entirely.
+</Accordion>
+
+</AccordionGroup>
+
+<Note>
+  If your issue isn't covered above, open a bug report on GitHub. Include the Make It Rain version number (visible in **Settings → Community Plugins**), a description of the steps to reproduce the problem, and any error messages from the Obsidian developer console (`Cmd/Ctrl + Shift + I` → **Console** tab). File a report at [github.com/frostmute/make-it-rain/issues](https://github.com/frostmute/make-it-rain/issues).
+</Note>
