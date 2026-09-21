@@ -1,5 +1,5 @@
 ---
-title: "How Make It Rain Syncs Your Raindrop Bookmarks"
+title: "How Make It Rain Imports and Syncs Raindrop Bookmarks"
 sidebarTitle: "How It Works"
 description: "Learn how Make It Rain connects to Raindrop.io, fetches bookmarks, converts them to Markdown notes, and writes them to your Obsidian vault."
 ---
@@ -24,23 +24,25 @@ A typical imported note opens with frontmatter like this:
 
 ```yaml
 ---
-raindrop_id: 123456789
+id: 123456789
 title: "The Illustrated Transformer"
-url: "https://jalammar.github.io/illustrated-transformer/"
+source: "https://jalammar.github.io/illustrated-transformer/"
+type: article
+created: 2024-01-15T10:22:00.000Z
+lastupdate: 2024-03-01T08:45:00.000Z
+collectionId: 9876543
+collectionTitle: "AI Papers"
+collectionPath: "Tech Reading/AI Papers"
+collectionGroup: "Tech Reading"
 tags:
   - machine-learning
   - transformers
   - nlp
-collection: AI Papers
-collectionPath: Tech Reading/AI Papers
-created: 2024-01-15T10:22:00.000Z
-updated: 2024-03-01T08:45:00.000Z
-cover: "https://jalammar.github.io/images/transformer/transformer.png"
 banner: "https://jalammar.github.io/images/transformer/transformer.png"
 ---
 ```
 
-The `raindrop_id` field is the stable numeric identifier assigned by Raindrop.io. Make It Rain uses it as the canonical key for deduplication and Safe Sync matching. All other fields are populated from the Raindrop item's metadata at import time.
+The `id` field is the stable numeric identifier assigned by Raindrop.io. Make It Rain uses it as the canonical key for deduplication and Safe Sync matching. The `banner` field name is configurable via the **Banner frontmatter field name** setting (default: `banner`). All other fields are populated from the Raindrop item's metadata at import time.
 
 ## Rate Limiting
 
@@ -52,7 +54,7 @@ The importer also uses `fetchWithRetry`, which transparently retries transient n
 
 Two import options control how Make It Rain handles bookmarks you have already imported:
 
-- **Fetch only new (`fetchOnlyNew`)** — Make It Rain checks whether a note with the matching `raindrop_id` already exists in the target folder. If it does, the item is skipped and counted as "already exists" in the summary notice. Use this for routine top-ups where you only want net-new bookmarks added.
+- **Fetch only new (`fetchOnlyNew`)** — Make It Rain checks whether a note with the matching `id` already exists in the target folder. If it does, the item is skipped and counted as "already exists" in the summary notice. Use this for routine top-ups where you only want net-new bookmarks added.
 - **Update existing (`updateExisting`)** — If a note already exists, Make It Rain overwrites it with the latest data from Raindrop.io. Use this when you have edited a bookmark's title, tags, or note in Raindrop and want those changes reflected in your vault.
 
 Both options can be set per import run in the Fetch modal, or saved as part of an import preset.

@@ -1,5 +1,5 @@
 ---
-title: "Download Attachments and Files to Your Vault"
+title: "File Downloads: Save Raindrop Attachments to Vault"
 sidebarTitle: "File Downloads"
 description: "Enable Make It Rain's file download feature to save PDFs, EPUBs, audio, and video from Raindrop bookmarks directly into your Obsidian vault."
 ---
@@ -45,7 +45,7 @@ Two template variables give you access to the downloaded file inside your templa
 
 | Variable | Value |
 |---|---|
-| `{{localFile}}` | The vault-relative path to the downloaded file, e.g. `Bookmarks/Research/My Paper.pdf` |
+| `{{localFile}}` | An Obsidian wiki-link to the downloaded file, e.g. `[[My Paper.pdf]]` |
 | `{{localEmbed}}` | The Obsidian embed syntax for the file, e.g. `![[My Paper.pdf]]` |
 
 Both variables are empty strings when `downloadFiles` is disabled or when no file was downloaded for a given bookmark.
@@ -74,11 +74,11 @@ This renders as:
 
 Obsidian renders `![[My Document.pdf]]` as a native inline PDF viewer (or audio/video player for media files), so you can read or play the attachment without leaving the note.
 
-If you need the raw path instead — for example to build a custom Markdown link — use `{{localFile}}`:
+If you need to reference the file by its wiki-link — for example to insert a plain internal link — use `{{localFile}}` directly:
 
 ```handlebars
 {{#if localFile}}
-[Download]({{localFile}})
+See attached file: {{localFile}}
 {{/if}}
 ```
 

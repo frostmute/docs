@@ -1,7 +1,7 @@
 ---
-title: "Troubleshooting Make It Rain Issues"
+title: "Troubleshoot Common Make It Rain Problems and Errors"
 sidebarTitle: "Troubleshooting"
-description: "Diagnose and fix the most common Make It Rain problems — from empty imports and auth errors to duplicate notes, failed downloads, and Safe Sync surprises."
+description: "Diagnose and fix common Make It Rain problems: empty imports, auth errors, duplicate notes, failed downloads, and unexpected Safe Sync behavior."
 ---
 
 Most Make It Rain issues fall into a few predictable categories: authentication problems, import filters that are too restrictive, template syntax errors, or settings mismatches after a configuration change. This guide covers the most frequent problems and the fastest path to resolving each one. Work through the relevant section below, and if your issue isn't listed, open a GitHub issue using the link at the bottom of this page.
@@ -48,14 +48,14 @@ Most Make It Rain issues fall into a few predictable categories: authentication 
 </Accordion>
 
 <Accordion title="Duplicate notes are being created">
-  Make It Rain identifies existing notes by the `raindrop_id` field in YAML frontmatter — not by filename. Duplicate notes appear when:
+  Make It Rain checks for an existing note at the expected file path before creating a new one. Duplicate notes appear when:
 
-  - Existing notes are missing the `raindrop_id` frontmatter field (imported before version 1.10.0, or imported with a template that doesn't write frontmatter)
-  - The `fileNameTemplate` was changed after an initial import, creating a new filename that doesn't match the existing note
+  - The `fileNameTemplate` was changed after an initial import, so the new filename no longer matches the existing note, and a second note is created alongside it.
+  - A bookmark was moved to a different Raindrop collection after import, changing its target folder path so the existing note is no longer found in the expected location.
 
-  **Fix:** Check whether existing notes in your vault have `raindrop_id` in their frontmatter. Open one of the duplicate notes and look at the raw Markdown. If `raindrop_id` is absent, the plugin cannot match against it and will create a new note.
+  **Fix:** Check whether the `fileNameTemplate` setting or your Raindrop collection structure has changed since your last import. If the template changed, revert it to match your existing filenames, or delete the older duplicates and re-import. If a bookmark moved collections, the old note remains in its original folder — move or delete it manually.
 
-  For notes missing `raindrop_id`, you can either manually add the field to existing notes, or accept the duplicates and delete the older versions. Going forward, ensure your template writes `raindrop_id` to frontmatter — the default template does this automatically.
+  Going forward, use a stable filename template — `{{title}}` or `{{id}}` — and avoid changing it after your first import run.
 </Accordion>
 
 <Accordion title="File downloads are failing">
@@ -103,7 +103,7 @@ Most Make It Rain issues fall into a few predictable categories: authentication 
 
   **Check that the bookmark still exists in Raindrop.io** — If the bookmark was genuinely deleted from Raindrop.io, Safe Sync's assessment is correct. You can still choose Ignore in Prompt mode to keep the local note regardless.
 
-  **Check the `raindrop_id` frontmatter** — Safe Sync only evaluates notes that carry a `raindrop_id` field in their frontmatter. If a note has an incorrect or stale ID, it may match a deleted bookmark that doesn't correspond to the note's content. Correct the frontmatter value or remove `raindrop_id` from notes you want Safe Sync to ignore entirely.
+  **Check the ID frontmatter field** — Safe Sync evaluates notes that carry a recognized Raindrop ID field. The default template writes `id:` (alongside `source:`, `collectionId:`, and other Raindrop fields that confirm the note's origin); you can also use `raindrop_id:` or `raindropId:` for explicit identification. If a note has an incorrect or stale ID, it may match a deleted bookmark that doesn't correspond to the note's content. Correct the ID value, or remove the ID field entirely from notes you want Safe Sync to ignore.
 </Accordion>
 
 </AccordionGroup>

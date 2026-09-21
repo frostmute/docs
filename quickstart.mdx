@@ -1,5 +1,5 @@
 ---
-title: "Get Started with Make It Rain in Minutes"
+title: "Make It Rain Quickstart: Import Bookmarks in Minutes"
 sidebarTitle: "Quickstart"
 description: "Install Make It Rain, generate a Raindrop.io API token, and import your first bookmarks into Obsidian as Markdown notes in five minutes or less."
 ---
@@ -36,13 +36,13 @@ This quickstart walks you through everything from installing Make It Rain to see
   </Step>
 
   <Step title="Open the import modal">
-    Open the Command Palette with `Ctrl+P` (Windows/Linux) or `Cmd+P` (macOS) and type **Fetch raindrops**. Select **Fetch Raindrops (Filtered)** from the list.
+    Open the Command Palette with `Ctrl+P` (Windows/Linux) or `Cmd+P` (macOS) and type **Fetch raindrops**. Select **Fetch raindrops (filtered)** from the list.
 
     The import modal opens and loads your Raindrop collections. Select the collection you want to import from the dropdown. You can also filter by tag or content type if you want to narrow the import.
   </Step>
 
   <Step title="Import your bookmarks">
-    Click **Fetch Raindrops**. Make It Rain fetches your bookmarks from the Raindrop API and writes each one to your vault as a Markdown file. A status notice shows progress. When it completes, your notes appear in the folder you configured — or the vault root if you left the default folder blank.
+    Click **Fetch raindrops**. Make It Rain fetches your bookmarks from the Raindrop API and writes each one to your vault as a Markdown file. A status notice shows progress. When it completes, your notes appear in the folder you configured — or the vault root if you left the default folder blank.
   </Step>
 </Steps>
 
@@ -53,9 +53,12 @@ Each bookmark becomes a Markdown file with YAML frontmatter containing the full 
 ```markdown
 ---
 title: "Understanding React Hooks"
-id: 123456789
-link: https://example.com/react-hooks-deep-dive
+source: https://example.com/react-hooks-deep-dive
 type: article
+created: 2024-03-10T09:15:00Z
+lastupdate: 2024-03-11T14:42:00Z
+id: 123456789
+collectionId: 4567890
 collectionTitle: "Web Development"
 collectionPath: "Learning/Web Development"
 collectionGroup: "CORE KNOWLEDGE"
@@ -63,32 +66,37 @@ tags:
   - react
   - javascript
   - frontend
-created: 2024-03-10T09:15:00Z
-lastupdate: 2024-03-11T14:42:00Z
 banner: https://example.com/images/react-cover.jpg
 ---
 
+![Understanding React Hooks](https://example.com/images/react-cover.jpg)
+
 # Understanding React Hooks
 
-> A deep dive into the React Hooks API and how to replace class-based lifecycle methods with functional components.
+## Description
 
-**My note:** Great reference — revisit before the team migration sprint.
+A deep dive into the React Hooks API and how to replace class-based lifecycle methods with functional components.
 
-## Highlights
+## Notes
 
-- ==Hooks let you use state and other React features without writing a class.== *(2024-03-10)*
-- ==The useEffect Hook lets you perform side effects in function components.== *(2024-03-10)*
+Great reference — revisit before the team migration sprint.
+
+## Key Points
+
+> Hooks let you use state and other React features without writing a class.
+> The useEffect Hook lets you perform side effects in function components.
+
+---
 
 ## Details
 
-| Field | Value |
-|-------|-------|
-| Domain | example.com |
-| Type | Article |
-| Saved | March 10, 2024 |
-| Updated | March 11, 2024 |
+- **Type**: Article
+- **Domain**: example.com
+- **Created**: March 10, 2024
+- **Updated**: March 11, 2024
+- **Tags**: react, javascript, frontend
 
-[Open in Raindrop](https://app.raindrop.io/item/123456789) · [Visit source](https://example.com/react-hooks-deep-dive)
+[Read Article](https://example.com/react-hooks-deep-dive)
 ```
 
 The exact output depends on your active template. The default template includes all available metadata; you can customize every section using the template engine.

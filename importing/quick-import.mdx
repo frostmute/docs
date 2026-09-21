@@ -1,5 +1,5 @@
 ---
-title: "Quick Import a Single Raindrop by URL or ID"
+title: "Quick Import a Single Raindrop Bookmark by URL or ID"
 sidebarTitle: "Quick Import"
 description: "Bring a single Raindrop.io bookmark into your Obsidian vault immediately by pasting its URL or numeric ID — no filter modal required."
 ---
@@ -20,7 +20,7 @@ Quick Import lets you fetch one bookmark at a time without opening the full Bulk
 
     **Accepted formats:**
     ```
-    https://app.raindrop.io/my/0/item/12345678
+    https://app.raindrop.io/my/0/12345678
     12345678
     ```
   </Step>
@@ -28,7 +28,7 @@ Quick Import lets you fetch one bookmark at a time without opening the full Bulk
     The prompt may also ask for an optional vault folder path and any tags to append to the note. Leave these blank to use your plugin defaults.
   </Step>
   <Step title="Confirm and import">
-    Press `Enter`. Make It Rain fetches the bookmark from the Raindrop.io API and creates the note in your vault. A status bar message confirms success.
+    Click **Import**. Make It Rain fetches the bookmark from the Raindrop.io API and creates the note in your vault. A notice confirms success or reports any error.
   </Step>
 </Steps>
 
@@ -36,7 +36,7 @@ Quick Import lets you fetch one bookmark at a time without opening the full Bulk
 
 Every bookmark in Raindrop.io has a unique numeric ID. You can find it in two places:
 
-- **From the browser URL:** Open the item in Raindrop.io. The URL follows the pattern `https://app.raindrop.io/my/0/item/12345678` — the ID is the number after `/item/`.
+- **From the browser URL:** Open the item in Raindrop.io. The URL follows the pattern `https://app.raindrop.io/my/0/12345678` — the ID is the trailing number in the path.
 - **From the share link:** Right-click any bookmark in Raindrop.io and copy its link. The numeric ID is the last segment of the path.
 
 You can paste either the full URL or just the bare number — Make It Rain extracts the ID automatically from a URL.

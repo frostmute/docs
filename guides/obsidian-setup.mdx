@@ -1,7 +1,7 @@
 ---
-title: "Set Up Make It Rain in Your Obsidian Vault"
+title: "How to Configure Make It Rain in Your Obsidian Vault"
 sidebarTitle: "Obsidian Setup"
-description: "Prepare your Obsidian vault for Make It Rain with recommended folder structures, key plugin settings, and compatible plugins that extend its capabilities."
+description: "Prepare your Obsidian vault for Make It Rain: set a default folder, configure key settings, and extend it with Dataview and other compatible plugins."
 ---
 
 Make It Rain works best when your vault is organized to receive and surface imported bookmarks efficiently. This guide covers practical vault layout recommendations, the key plugin settings to configure first, and a selection of Obsidian plugins that pair naturally with Make It Rain's output — including how to use Dataview to build live bookmark dashboards from your imported frontmatter.
@@ -83,7 +83,7 @@ Make It Rain produces richly structured Markdown notes with YAML frontmatter, ba
   Use Dataview to build a live "Recently Imported" table that updates automatically every time you run an import:
 
   ```dataview
-  TABLE url, created, collectionTitle
+  TABLE source, created, collectionTitle
   FROM "Bookmarks"
   SORT created DESC
   LIMIT 20

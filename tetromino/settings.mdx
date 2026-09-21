@@ -1,5 +1,5 @@
 ---
-title: "Tetromino Settings Reference"
+title: "Tetromino Settings: Complete Configuration Reference"
 sidebarTitle: "Settings"
 description: "Complete reference for every Tetromino setting — API token, block naming, attachment handling, enrichment options, and sync behavior."
 ---
@@ -31,7 +31,7 @@ Tetromino's settings are available under **Obsidian Settings → Community Plugi
   |---|---|---|
   | `title` | Block title only | `My Interesting Link.md` |
   | `id` | Are.na block ID only | `12345678.md` |
-  | `title-id` | Title and ID combined | `My Interesting Link-12345678.md` |
+  | `title-id` | Title and ID combined | `My Interesting Link (12345678).md` |
 
   <Tip>
     Use `title-id` if you have many blocks with similar or identical titles — the
@@ -49,11 +49,11 @@ Tetromino's settings are available under **Obsidian Settings → Community Plugi
 </ParamField>
 
 <ParamField path="excludeClasses" type="string[]" default="[]">
-  A list of Are.na block classes to skip entirely during import. Any block whose
-  class matches an entry in this list is ignored — no note is created and no
+  A list of Are.na block types to skip entirely during import. Any block whose
+  type matches an entry in this list is ignored — no note is created and no
   attachment is downloaded.
 
-  Valid values: `Text`, `Image`, `Link`, `Attachment`, `Media`, `Channel`.
+  Valid values: `Text`, `Image`, `Link`, `Attachment`, `Embed`.
 
   **Example:** Set to `["Image", "Attachment"]` to import only text and link
   blocks while skipping all media.

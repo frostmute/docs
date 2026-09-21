@@ -1,5 +1,5 @@
 ---
-title: "Customize Block Notes with Tetromino Templates"
+title: "Tetromino Templates: Customize Your Are.na Block Notes"
 sidebarTitle: "Templates"
 description: "Use Tetromino's Handlebars-like template engine to take full control over how Are.na block notes are formatted in your Obsidian vault."
 ---
@@ -66,7 +66,7 @@ When `templateEnabled` is `false` (the default), Tetromino uses its built-in out
 ---
 title: "{{title}}"
 arena_id: {{id}}
-arena_type: {{class}}
+arena_type: {{type}}
 arena_url: "{{arena_url}}"
 {{#if description}}description: "{{description}}"{{/if}}
 ---
@@ -113,7 +113,7 @@ Iterate over array variables with `{{#each}}...{{/each}}`. Inside the loop body,
 
 ```handlebars
 {{#each comments}}
-- {{this.content}}
+- {{this.body}}
 {{/each}}
 ```
 
@@ -125,7 +125,7 @@ Every variable available inside a Tetromino template is listed below. Variables 
 |---|---|
 | `{{id}}` | Are.na block ID |
 | `{{title}}` | Block title |
-| `{{class}}` | Block type (`Text`, `Image`, `Link`, `Attachment`, `Media`, `Channel`) |
+| `{{type}}` | Block type (`Text`, `Image`, `Link`, `Attachment`, `Embed`) |
 | `{{content}}` | Block content body |
 | `{{description}}` | Block description |
 | `{{image}}` | Image URL (populated for Image blocks) |
@@ -163,7 +163,7 @@ channel: "{{channel_title}}"
 {{#if comments}}
 ## Comments
 {{#each comments}}
-- {{this.content}}
+- {{this.body}}
 {{/each}}
 {{/if}}
 ```

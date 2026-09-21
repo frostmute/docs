@@ -1,5 +1,5 @@
 ---
-title: "Make It Rain Settings Reference"
+title: "Make It Rain Settings: Full Configuration Reference"
 sidebarTitle: "Settings"
 description: "Complete reference for every Make It Rain setting — authentication, import defaults, folder organization, Safe Sync, and the template engine."
 ---
@@ -34,9 +34,9 @@ Access the Make It Rain settings panel by opening Obsidian's **Settings**, navig
   | `{{title}}` | The Raindrop bookmark title |
   | `{{id}}` | The numeric Raindrop ID |
   | `{{collectionTitle}}` | The name of the collection |
-  | `{{date}}` | Today's date (YYYY-MM-DD) |
+  | `{{date}}` | The bookmark's creation date (YYYY-MM-DD) |
 
-  **Example:** `{{date}}-{{title}}` produces filenames like `2024-06-01-My Bookmark.md`, which avoids collisions when titles repeat across collections.
+  **Example:** `{{date}}-{{title}}` produces filenames like `2024-06-01-My Bookmark.md`, where the date is the bookmark's Raindrop creation date. This avoids collisions when the same title appears across multiple collections.
 </ParamField>
 
 <ParamField path="showRibbonIcon" type="boolean" default="true">
@@ -78,7 +78,7 @@ Access the Make It Rain settings panel by opening Obsidian's **Settings**, navig
 </ParamField>
 
 <ParamField path="downloadFiles" type="boolean" default="false">
-  Download file attachments — PDFs, EPUBs, audio files, and video files — directly into your vault alongside the imported note. The downloaded file path is exposed as `{{localFile}}` in templates, and `{{localEmbed}}` provides the Obsidian embed syntax (e.g., `![[My Document.pdf]]`).
+  Download file attachments — PDFs, EPUBs, audio files, and video files — directly into your vault alongside the imported note. The wiki-link to the downloaded file is exposed as `{{localFile}}` (e.g., `[[My Document.pdf]]`) in templates, and `{{localEmbed}}` provides the Obsidian embed syntax (e.g., `![[My Document.pdf]]`).
 
   See [File Downloads](/configuration/file-downloads) for storage details, supported file types, and template usage examples.
 </ParamField>
@@ -88,7 +88,7 @@ Access the Make It Rain settings panel by opening Obsidian's **Settings**, navig
 <ParamField path="enableSafeSync" type="boolean" default="false">
   Automatically run a Safe Sync scan after each import. Safe Sync checks your vault for notes whose corresponding Raindrop bookmark has been deleted or renamed since the last import, then takes the action specified by `safeSyncAction`.
 
-  You can also trigger Safe Sync manually at any time from the command palette using **Safe Sync: scan for deleted/renamed Raindrops**.
+  You can also trigger Safe Sync manually at any time from the command palette using **Safe sync: scan for deleted/renamed Raindrops**.
 </ParamField>
 
 <ParamField path="safeSyncAction" type="Prompt | Archive | Delete" default="Prompt">

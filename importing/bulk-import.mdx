@@ -1,5 +1,5 @@
 ---
-title: "Bulk Import Bookmarks from Raindrop.io"
+title: "Bulk Import Raindrop.io Bookmarks to Obsidian Vault"
 sidebarTitle: "Bulk Import"
 description: "Filter Raindrop.io bookmarks by collection, tag, and content type, then import them all into your Obsidian vault in a single batch operation."
 ---
@@ -51,7 +51,7 @@ The modal is divided into three sections: **Source**, **Filters**, and **Note Fo
 </ParamField>
 
 <ParamField body="Fetch Only New" type="boolean" default="true">
-  When enabled, Make It Rain skips any bookmark whose corresponding note already exists in the vault. Matching is based on the `raindrop_id` in frontmatter. Disable this if you want to re-import and overwrite existing notes.
+  When enabled, Make It Rain skips any bookmark whose corresponding note already exists in the vault. Matching is based on whether a file with the generated filename is already present at the target path. Disable this if you want to re-import and overwrite existing notes.
 </ParamField>
 
 <ParamField body="Update Existing Notes" type="boolean" default="false">
@@ -80,21 +80,23 @@ A completed import note looks like this:
 
 ```markdown
 ---
-raindrop_id: 12345678
+id: 12345678
 title: "Getting Started with Obsidian"
-link: https://obsidian.md/getting-started
-excerpt: A comprehensive guide to building your personal knowledge base.
-cover: https://obsidian.md/images/og.png
-banner: https://obsidian.md/images/og.png
+source: https://obsidian.md/getting-started
+description: A comprehensive guide to building your personal knowledge base.
+type: article
+created: 2024-03-15
+lastupdate: 2024-06-01
+collectionTitle: Productivity
 tags:
   - obsidian
   - productivity
-type: article
-collection: Productivity
-created: 2024-03-15
-updated: 2024-06-01
-domain: obsidian.md
 ---
+
+# Getting Started with Obsidian
+
+## Description
+A comprehensive guide to building your personal knowledge base.
 
 ## Highlights
 

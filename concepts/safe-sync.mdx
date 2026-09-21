@@ -1,5 +1,5 @@
 ---
-title: "Safe Sync: Keep Your Vault in Step with Raindrop"
+title: "Safe Sync: Keep Your Vault Synced with Raindrop.io"
 sidebarTitle: "Safe Sync"
 description: "Safe Sync scans your vault for notes whose Raindrop source was deleted or moved, then lets you archive, delete, or skip each orphaned note."
 ---
@@ -8,15 +8,15 @@ Safe Sync is Make It Rain's mechanism for cleaning up orphaned notes — notes i
 
 ## The Problem Safe Sync Solves
 
-Every note Make It Rain imports includes a `raindrop_id` field in its YAML frontmatter. When you later delete or rename a bookmark in Raindrop.io, the corresponding note stays in your vault indefinitely. Over time, these orphaned notes accumulate as stale references — they occupy space, appear in searches, and may confuse graph views or Dataview queries.
+Every note Make It Rain imports includes a numeric `id` field in its YAML frontmatter (alongside corroborating fields such as `source` and `collectionId`). When you later delete or rename a bookmark in Raindrop.io, the corresponding note stays in your vault indefinitely. Over time, these orphaned notes accumulate as stale references — they occupy space, appear in searches, and may confuse graph views or Dataview queries.
 
-Safe Sync detects these orphans by checking each local `raindrop_id` against the live Raindrop.io API. It then presents you with a review interface so you can decide what to do with each one before anything is changed.
+Safe Sync detects these orphans by checking each local Raindrop ID against the live Raindrop.io API. It then presents you with a review interface so you can decide what to do with each one before anything is changed.
 
 ## How It Works
 
 Safe Sync operates in two phases:
 
-1. **Vault scan** — Make It Rain reads every Markdown file in the target folder (or your full vault if no default folder is set) and collects the `raindrop_id` value from each note's frontmatter. Only notes that contain this field are considered candidates.
+1. **Vault scan** — Make It Rain reads every Markdown file in the target folder (or your full vault if no default folder is set) and collects the Raindrop ID from each note's frontmatter. It recognizes three frontmatter keys: `id` (current default, confirmed by corroborating fields such as `source` or `collectionId`), `raindrop_id`, and `raindropId` (both honored unconditionally for backwards compatibility). Only notes containing one of these fields are considered candidates.
 2. **API verification** — The collected IDs are batch-checked against the Raindrop.io API using up to 10 concurrent requests. Each ID is categorized as:
    - **Deleted** — the API confirmed that this Raindrop no longer exists in your account.
    - **Unknown** — the API response was ambiguous (for example, due to a network timeout or an unexpected error). Make It Rain does not act on unknown items automatically.
@@ -35,7 +35,7 @@ If all local notes have a matching live bookmark, Safe Sync reports a clean resu
     Make It Rain will scan your vault and check each found ID against the Raindrop.io API. A progress notice appears while the check runs.
   </Step>
   <Step title="Review detected orphans">
-    When the scan completes, a modal opens listing every orphaned note. Each entry shows the note's filename, its `raindrop_id`, and whether it was categorized as `deleted` or `unknown`. Use this list to confirm that the flagged notes are genuinely expendable before taking action.
+    When the scan completes, a modal opens listing every orphaned note. Each entry shows the note's filename, its Raindrop ID, and whether it was categorized as `deleted` or `unknown`. Use this list to confirm that the flagged notes are genuinely expendable before taking action.
   </Step>
   <Step title="Choose an action for each item">
     For each note, select **Archive**, **Delete**, or **Skip**. Confirmed-deleted items default to the action configured in Settings. Unknown items always default to **Skip** — you must explicitly change them to act on them.

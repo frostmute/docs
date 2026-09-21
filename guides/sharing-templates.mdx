@@ -1,7 +1,7 @@
 ---
-title: "Share and Import Make It Rain Templates"
+title: "Export and Import Make It Rain Templates as JSON Files"
 sidebarTitle: "Sharing Templates"
-description: "Export your Make It Rain templates as JSON to share with the community, and import templates others have shared directly from your clipboard into any vault."
+description: "Export and import Make It Rain templates as portable JSON to back up your work, move templates between vaults, and share with the community."
 ---
 
 Make It Rain's template engine supports exporting and importing templates as portable JSON. This means you can back up a template you've spent time crafting, move it between vaults, or share it with other Make It Rain users via a GitHub Gist, forum post, or Discord message. Importing is equally simple — copy a template JSON from anywhere and paste it directly into the plugin. This guide walks through both directions.
@@ -32,7 +32,7 @@ The exported JSON follows this structure:
 
 ```json
 {
-  "version": 1,
+  "version": "2.1.4",
   "name": "My Article Template",
   "template": "{{#extends \"base\"}}...{{/extends}}",
   "description": "Adds scraped content and highlights",
@@ -83,7 +83,7 @@ The Make It Rain GitHub repository is the central place for community-shared tem
 If you've built a template that handles a specific use case well — academic papers, recipe bookmarks, video lectures, book annotations — consider sharing it. Paste the exported JSON into a new Discussion thread with a short description of what it does.
 
 <Note>
-  The `version` field in the exported JSON exists for forward compatibility. Future versions of Make It Rain may introduce new template features; the version number allows the importer to handle older templates gracefully without breaking. Always include `"version": 1` when manually writing or editing template JSON for sharing.
+  The `version` field in the exported JSON is a string containing the Make It Rain plugin version that created the template (for example, `"2.1.4"`). It exists for forward compatibility — future plugin versions can use it to handle older templates gracefully. When writing or editing template JSON by hand, copy the version string from your current plugin version, visible at the bottom of the Make It Rain settings page.
 </Note>
 
 ## Backing Up All Templates

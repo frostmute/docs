@@ -1,5 +1,5 @@
 ---
-title: "Aggregate Raindrop Highlights into a Single Note"
+title: "Aggregate Raindrop.io Highlights into a Single Note"
 sidebarTitle: "Highlights"
 description: "Pull highlighted passages from multiple Raindrop.io bookmarks into one consolidated Obsidian note, grouped by source and filtered by tag."
 ---
@@ -58,34 +58,29 @@ The **Aggregate Highlights by Tag** command collects every highlighted passage f
     Enter the folder path inside your vault where the aggregate note should be saved. Leave blank to use your default folder.
   </Step>
   <Step title="Confirm and generate">
-    Press `Enter` or click **Aggregate**. Make It Rain fetches all bookmarks with that tag, collects their highlights, and writes the output note.
+    Click **Aggregate highlights**. Make It Rain fetches all bookmarks with that tag, collects their highlights, and writes the output note to your vault.
   </Step>
 </Steps>
 
-The generated note groups highlights by their source bookmark, with a link back to the original note. A typical aggregate note looks like this:
+The generated note groups highlights by their source bookmark, with a clickable link to the original URL. A typical aggregate note looks like this:
 
 ```markdown
----
-title: "Highlights: machine-learning"
-tags:
-  - machine-learning
-  - highlights-aggregate
-generated: 2024-06-15
----
+# Aggregated Highlights: #machine-learning
 
-# Highlights: machine-learning
+Generated on: 6/15/2024, 9:00:00 AM
 
 ## [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-
 - The dominant sequence transduction models are based on complex recurrent or convolutional neural networks.
-- Attention mechanisms allow modeling of dependencies without regard to their distance in input or output sequences. — *Key insight for transformers*
+- Attention mechanisms allow modeling of dependencies without regard to their distance in input or output sequences.
+  - **Note**: Key insight for transformers
 
 ---
 
 ## [A Visual Introduction to Machine Learning](http://www.r2d3.us/visual-intro-to-machine-learning-part-1/)
-
 - A decision tree is built by asking a series of questions about the data.
 - Overfitting occurs when a model learns the training data too well, including its noise.
+
+---
 ```
 
 <Tip>

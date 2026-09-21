@@ -1,5 +1,5 @@
 ---
-title: "Template Engine: Customize Your Bookmark Notes"
+title: "Template Engine: Customize Imported Bookmark Notes"
 sidebarTitle: "Templates"
 description: "Use Make It Rain's Handlebars-like template engine to control the Markdown structure, frontmatter fields, and content of every imported bookmark note."
 ---
@@ -65,10 +65,14 @@ Here is a full working template you can paste directly into the Make It Rain tem
 ```handlebars
 ---
 title: "{{title}}"
-url: "{{link}}"
-tags: [{{formattedTags}}]
+source: "{{link}}"
+type: {{type}}
 created: {{formattedCreatedDate}}
 collection: "{{collectionTitle}}"
+tags:
+{{#each tags}}
+  - {{this}}
+{{/each}}
 {{#if cover}}{{bannerFieldName}}: "{{cover}}"{{/if}}
 ---
 
@@ -167,7 +171,7 @@ All variables below are available inside any template. Array variables (`tags`, 
 |---|---|
 | `title` | Bookmark title |
 | `id` | Raindrop item ID (numeric) |
-| `link` | Original URL |
+| `link` | Original URL (canonical; also available as `url`) |
 | `cover` | Cover image URL |
 | `excerpt` | Short description or excerpt from the page |
 | `note` | Your personal note on the bookmark in Raindrop |
@@ -181,7 +185,7 @@ All variables below are available inside any template. Array variables (`tags`, 
 | `collectionGroup` | Name of the parent group |
 | `collectionParentId` | Numeric ID of the parent collection, if any |
 | `tags` | Array of tag strings |
-| `formattedTags` | Tags as a comma-separated string, ready for inline YAML arrays |
+| `formattedTags` | Tags as space-separated hashtags (e.g. `#machine-learning #nlp`) |
 | `highlights` | Array of highlight objects: `{text, note, color, created}` |
 | `domain` | Source domain extracted from `link` (e.g. `github.com`) |
 | `renderedType` | Human-readable content type label |

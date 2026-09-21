@@ -1,5 +1,5 @@
 ---
-title: "How Tetromino Converts Are.na Blocks to Notes"
+title: "How Tetromino Converts Are.na Blocks into Obsidian Notes"
 sidebarTitle: "Blocks"
 description: "Understand how Tetromino maps each Are.na block type to a Markdown note, including frontmatter fields, filename formats, and channel index notes."
 ---
@@ -8,7 +8,9 @@ In Are.na, a block is the fundamental unit of content. A block can be a piece of
 
 ## Block Types
 
-Tetromino recognizes six block types from the Are.na API. Each is converted differently:
+Tetromino handles five Are.na block types plus channel references. Each is converted differently:
+
+<AccordionGroup>
 
 <Accordion title="Text">
   A plain text or Markdown block. The block's body content becomes the note body. If the block has a title, it appears as a top-level heading (`# Title`) at the start of the note. If there is no title, Tetromino uses the block ID as the note filename and omits the heading.
@@ -32,13 +34,15 @@ Tetromino recognizes six block types from the Are.na API. Each is converted diff
   A file upload (PDF, ZIP, document, etc.). The file is downloaded or linked based on your `attachmentHandling` setting. The rendered note includes the file as a link or embed and preserves the block title and description.
 </Accordion>
 
-<Accordion title="Media / Embed">
+<Accordion title="Embed">
   An embeddable media block (videos, audio, etc.) sourced via oEmbed. The embed URL is preserved in the note, and the source provider and description are included where available.
 </Accordion>
 
-<Accordion title="Channel">
-  A reference to another Are.na channel embedded inside the current channel. Tetromino renders it as a Markdown link pointing to the referenced channel's index note in your vault (if that channel has also been imported). A best-effort preview image can be included by enabling **Channel block preview image** in settings.
+<Accordion title="Channel reference">
+  A reference to another Are.na channel embedded inside the current channel. Tetromino renders it as a Markdown link pointing to the referenced channel's index note in your vault (if that channel has also been imported). Enable **Channel block preview image** in settings to include a best-effort thumbnail.
 </Accordion>
+
+</AccordionGroup>
 
 ## Note Frontmatter
 
@@ -77,7 +81,7 @@ The `blockNaming` setting controls how Tetromino names the Markdown file for eac
 Use `id` or `title-id` if you have blocks with identical titles in the same channel, or if you want filenames that remain stable even if block titles change on Are.na.
 
 <Tip>
-  You can skip importing specific block types entirely using the **Exclude block classes** setting. For example, add `Image` to the exclusion list to skip all image blocks across all channels. This is useful if you prefer to keep images as remote links rather than imported notes.
+  You can skip importing specific block types entirely using the **Exclude block classes** setting (`excludeClasses`). For example, add `Image` to the exclusion list to skip all image blocks across all channels. This is useful if you prefer to keep images as remote links rather than imported notes.
 </Tip>
 
 ## Channel Index Notes
